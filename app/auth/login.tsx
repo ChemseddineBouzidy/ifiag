@@ -23,6 +23,8 @@ export default function Login() {
     const [password, setPassword] = useState<string>('password123');
     const [showPassword, setShowPassword] = useState(false);
     const [errors, setErrors] = useState<LoginErrors>({});
+    const [generalError, setGeneralError] = useState<string>('');
+
 
     const schema = z.object({
         email: z.string().email("Invalid email"),
@@ -53,6 +55,7 @@ export default function Login() {
         }
 
         setErrors({});
+        setGeneralError('');
         try {
             const response = await fetch(url, {
                 method: "POST",
@@ -65,10 +68,7 @@ export default function Login() {
             
             if (!response.ok) {
                 if (response.status === 401) {
-                    setErrors({
-                        email: 'Invalid email or password',
-                        password: 'Invalid email or password'
-                    });
+                    setGeneralError('Invalid email or password');
                     return;
                 }
                 throw new Error(`HTTP error! status: ${response.status}`);
@@ -76,15 +76,15 @@ export default function Login() {
             
             const data = await response.json();
             console.log('Login successful:', data);
-            
             // Handle successful login here
             // For example, store the token, navigate to home screen, etc.
             
         } catch (error : any) {
             console.error('Login failed:', error);
             
-            if (error.response?.status === 422) {
+            if (error.response?.status === 401) {
                 setErrors(error.response.data.errors);
+                console.error('Login failed:', error.response.data.errors);
             }
         }
     }
@@ -111,7 +111,11 @@ export default function Login() {
                             Connecte-toi pour accéder à ton espace scolaire personnalisé.
                         </Text>
                     </View>
-
+                    {generalError && (
+                        <View style={styles.errorContainer}>
+                            <Text style={styles.errorText}>{generalError}</Text>
+                        </View>
+                    )}
                     <View style={styles.form}>
                         <View style={styles.inputContainer}>
                             <TextInput
@@ -126,6 +130,7 @@ export default function Login() {
                             />
                             {errors.email && <Text style={{ color: 'red', marginTop: 4 }}>{errors.email}</Text>}
                         </View>
+                    
 
                         <View style={styles.inputContainer}>
                             <TextInput
@@ -138,7 +143,9 @@ export default function Login() {
                                 autoCapitalize="none"
                                 autoCorrect={false}
                             />
-                            {errors.password && <Text style={{ color: 'red', marginTop: 4 }}>{errors.password}</Text>}
+                            {errors.password && (
+                                <Text style={styles.errorText}>{errors.password}</Text>
+                            )}
 
                             <TouchableOpacity
                                 style={styles.eyeIcon}
@@ -151,7 +158,7 @@ export default function Login() {
                                 />
                             </TouchableOpacity>
                         </View>
-
+                
                         <TouchableOpacity
                             style={styles.forgotContainer}
                             onPress={handleForgotPassword}
@@ -278,5 +285,24 @@ const styles = StyleSheet.create({
         color: '#ff6b35',
         fontSize: 16,
         fontWeight: '600',
+    },
+    errorContainer: {
+        backgroundColor: '#f8d7da',
+        borderColor: '#f5c6cb',
+        borderWidth: 1,
+        borderRadius: 8,
+        padding: 12,
+        marginBottom: 16,
+    },
+    errorText: {
+        color: '#721c24',
+        fontSize: 14,
+        textAlign: 'center',
+    },
+    fieldError: {
+        color: '#dc3545',
+        fontSize: 12,
+        marginTop: 4,
+        marginLeft: 4,
     },
 });
