@@ -1,36 +1,58 @@
 import { router } from "expo-router";
-import { Text, TouchableOpacity, View } from "react-native";
+import React, { useEffect } from "react";
+import { SafeAreaView, View } from "react-native";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
+import LogoIcon from "./LogoIcon";
 
-export default function Index() {
+type Props = { navigation: any };
+
+const SplashScreen: React.FC<Props> = ({ navigation }) => {
+  const progress = useSharedValue(3);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ scale: progress.value }],
+    };
+  });
+
+  const init = async () => {
+    await new Promise((resolve) => setTimeout(() => resolve(true), 800));
+    router.replace("/OnboardingScreen");
+  };
+
+  const animationLogic = async () => {
+    progress.value = withTiming(2, { duration: 500 });
+    await new Promise((resolve) => setTimeout(() => resolve(true), 300));
+    progress.value = withTiming(999, { duration: 1000 });
+  };
+
+  useEffect(() => {
+    setTimeout(() => {
+      animationLogic();
+      init();
+    }, 1500);
+  }, []);
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Edit app/index.tsx to edit this screen.</Text>
-      <TouchableOpacity 
-        style={styles.button}
-        onPress={() => router.push("/SplashScreen")}
+    <SafeAreaView style={{ flex: 1, backgroundColor: "black" }}>
+      <View
+        style={{
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          flex: 1,
+        }}
       >
-        <Text style={styles.buttonText}>Go to Splash Screen</Text>
-      </TouchableOpacity>
-    </View>
+        <Animated.View style={[animatedStyle]}>
+          <LogoIcon />
+        </Animated.View>
+      </View>
+    </SafeAreaView>
   );
-}
-const styles = {
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  text: {
-    fontSize: 16,
-    marginBottom: 20,
-  },
-  button: {
-    padding: 10,
-    backgroundColor: "#55ACEE",
-    borderRadius: 5,
-  },
-  buttonText: {
-    color: "white",
-    fontSize: 16,
-  }
 };
+
+export default SplashScreen;

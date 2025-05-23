@@ -5,6 +5,9 @@ export default function RootLayout() {
   <Stack>
     <Stack.Screen name="index" options={{ headerShown: false }} />
     <Stack.Screen name="SplashScreen" options={{ headerShown: false }} />
+    <Stack.Screen name="OnboardingScreen" options={{ headerShown: false , animation: 'slide_from_right'}} />
+    <Stack.Screen name="auth/login" options={{ headerShown: false }} />
+    
   </Stack>
     );
 }
