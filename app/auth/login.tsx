@@ -4,15 +4,15 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import {
+    ImageBackground,
     KeyboardAvoidingView,
     Platform,
-    SafeAreaView,
     StatusBar,
     StyleSheet,
     Text,
     TextInput,
     TouchableOpacity,
-    View,
+    View
 } from 'react-native';
 import { z } from 'zod';
 import { HOME_ROUTE } from '../constants/routes'; // adjust path as needed
@@ -42,9 +42,9 @@ export default function Login() {
         "Accept": "application/json",
     };
 
-  
 
-  
+
+
     const handleLogin = async () => {
         const result = schema.safeParse({ email, password });
 
@@ -69,7 +69,7 @@ export default function Login() {
                     password
                 }),
             });
-            
+
             if (!response.ok) {
                 if (response.status === 401) {
                     setGeneralError('Invalid email or password');
@@ -77,22 +77,22 @@ export default function Login() {
                 }
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            
+
             const data = await response.json();
             console.log('Login successful:', data.data.access_token);
             await AsyncStorage.setItem('access_token', data.data.access_token);
             // router.replace('/home');
             const profileResponse = await fetch('https://ifiag.pidefood.com/api/auth/profile', {
                 headers: { Authorization: `Bearer ${data.data.access_token}` },
-              });
-              const profileData = await profileResponse.json();
-            
-              setUserAndStudent({
+            });
+            const profileData = await profileResponse.json();
+
+            setUserAndStudent({
                 user: profileData.data.user,
                 student: profileData.data.student,
-              });
-              router.replace(HOME_ROUTE);
-            
+            });
+            router.replace(HOME_ROUTE);
+
         } catch (error) {
             console.error('Login failed:', error);
             setGeneralError('An error occurred during login. Please try again.');
@@ -109,8 +109,14 @@ export default function Login() {
     };
 
     return (
-        <SafeAreaView style={styles.container}>
+        <>
+        {/* // <SafeAreaView style={styles.container}> */}
             <StatusBar barStyle="dark-content" backgroundColor="#f8f9fa" />
+            <ImageBackground
+        source={require('../../assets/images/login.png')} // Replace with your image path
+        style={styles.backgroundImage}
+        resizeMode="cover"
+      >
             <KeyboardAvoidingView
                 style={styles.keyboardAvoid}
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -138,11 +144,11 @@ export default function Login() {
                                 keyboardType="email-address"
                                 autoCapitalize="none"
                                 autoCorrect={false}
-                                 returnKeyType="next"
+                                returnKeyType="next"
                             />
                             {errors.email && <Text style={{ color: 'red', marginTop: 4 }}>{errors.email}</Text>}
                         </View>
-                    
+
 
                         <View style={styles.inputContainer}>
                             <TextInput
@@ -172,7 +178,7 @@ export default function Login() {
                                 />
                             </TouchableOpacity>
                         </View>
-                
+
                         <TouchableOpacity
                             style={styles.forgotContainer}
                             onPress={handleForgotPassword}
@@ -196,8 +202,12 @@ export default function Login() {
                         </View>
                     </View>
                 </View>
+             
             </KeyboardAvoidingView>
-        </SafeAreaView>
+        </ImageBackground>
+
+        {/* // </SafeAreaView> */}
+        </>
     );
 }
 
@@ -319,4 +329,9 @@ const styles = StyleSheet.create({
         marginTop: 4,
         marginLeft: 4,
     },
+
+    backgroundImage: {
+        width: '100%',
+        height: '100%',
+      },
 });

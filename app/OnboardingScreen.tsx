@@ -1,4 +1,3 @@
-// screens/OnboardingCustom.tsx
 import { router } from 'expo-router';
 import React, { useRef, useState } from 'react';
 import { Dimensions, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -11,7 +10,7 @@ const slides = [
     image: require('../assets/images/OnboardingScreen/1.png'),
     title: 'Bienvenue sur Ifiage',
     description: 'Gérez vos cours, vos devoirs et votre emploi du temps, le tout au même endroit.',
-    backgroundColor: '#FF6600'
+    backgroundColor: '#FA6407'
   },
   {
     id: '2',
@@ -25,7 +24,7 @@ const slides = [
     image: require('../assets/images/OnboardingScreen/3.png'),
     title: 'Prêt(e) à réussir ?',
     description: 'Connecte-toi ou crée ton compte et découvre une nouvelle façon de gérer ton année scolaire avec Ifiage.',
-    backgroundColor: '#2196F3'
+    backgroundColor: '#1E73BE'
   }
 ];
 
@@ -125,7 +124,7 @@ const styles = StyleSheet.create({
     height: height * 0.55,
     resizeMode: 'contain',
     borderRadius: 10,
-    marginTop:57
+    marginTop:52
   },
   bottomContainer: {
     flex: 1.5,
