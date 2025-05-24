@@ -15,7 +15,7 @@ import {
     View,
 } from 'react-native';
 import { z } from 'zod';
-
+import { HOME_ROUTE } from '../constants/routes'; // adjust path as needed
 interface LoginErrors {
     email?: string;
     password?: string;
@@ -28,7 +28,6 @@ export default function Login() {
     const [errors, setErrors] = useState<LoginErrors>({});
     const [generalError, setGeneralError] = useState<string>('');
     const { setUserAndStudent } = useUserStore();
-
 
     const schema = z.object({
         email: z.string().email("Invalid email"),
@@ -92,7 +91,7 @@ export default function Login() {
                 user: profileData.data.user,
                 student: profileData.data.student,
               });
-              router.replace('/home');
+              router.replace(HOME_ROUTE);
             
         } catch (error) {
             console.error('Login failed:', error);
@@ -105,6 +104,7 @@ export default function Login() {
     };
 
     const handleForgotPassword = () => {
+        router.replace("/home");
         console.log('Forgot password pressed');
     };
 
@@ -138,6 +138,7 @@ export default function Login() {
                                 keyboardType="email-address"
                                 autoCapitalize="none"
                                 autoCorrect={false}
+                                 returnKeyType="next"
                             />
                             {errors.email && <Text style={{ color: 'red', marginTop: 4 }}>{errors.email}</Text>}
                         </View>
@@ -153,6 +154,8 @@ export default function Login() {
                                 secureTextEntry={!showPassword}
                                 autoCapitalize="none"
                                 autoCorrect={false}
+                                returnKeyType="done"
+                                onSubmitEditing={handleLogin}
                             />
                             {errors.password && (
                                 <Text style={styles.errorText}>{errors.password}</Text>

@@ -16,15 +16,15 @@ const slides = [
   {
     id: '2',
     image: require('../assets/images/OnboardingScreen/2.png'),
-    title: 'Organisez vos cours',
-    description: 'Créez et gérez facilement vos emplois du temps et vos cours.',
-    backgroundColor: '#4CAF50'
+    title: 'Reste connecté(e)',
+    description: 'Notifications en temps réel, messages des profs, infos de l école : ne rate plus rien d important !',
+    backgroundColor: '#00112B'
   },
   {
     id: '3',
     image: require('../assets/images/OnboardingScreen/3.png'),
-    title: 'Suivez vos progrès',
-    description: 'Visualisez votre progression et restez motivé dans vos études.',
+    title: 'Prêt(e) à réussir ?',
+    description: 'Connecte-toi ou crée ton compte et découvre une nouvelle façon de gérer ton année scolaire avec Ifiage.',
     backgroundColor: '#2196F3'
   }
 ];
@@ -48,6 +48,9 @@ export default function OnboardingCustom() {
     return (
       <View style={[styles.slide, { backgroundColor: item.backgroundColor }]}>
         <View style={styles.topContainer}>
+          <View style={styles.circleContainer}>
+            <View style={[styles.circle]} />
+          </View>
           <Image
             source={item.image}
             style={styles.image}
@@ -133,7 +136,7 @@ const styles = StyleSheet.create({
     paddingTop: 25,
   },
   title: {
-    fontSize: 28,
+    fontSize: 33,
     marginTop: 38,
     fontWeight: 'bold',
     textAlign: 'center',
@@ -141,11 +144,12 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   subtitle: {
-    marginTop: 8,
+    marginTop: 18,
     fontSize: 20,
     color: '#555',
+    lineHeight:29,
     textAlign: 'center',
-    opacity:0.8,
+    opacity:0.7,
   },
   footer: {
     marginTop: 'auto',
@@ -153,11 +157,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingBottom: 20,
-    marginBottom:44,
+    marginBottom:54,
     
   },
   skip: {
-    fontSize: 16,
+    fontSize: 22,
     color: '#666',
   },
   nextButton: {
@@ -187,5 +191,29 @@ const styles = StyleSheet.create({
   paginationDotActive: {
     backgroundColor: 'white',
     width: 20,
+  },
+  circleContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  circle: {
+    width: 300,
+    height: 300,
+    borderRadius: 200,
+    backgroundColor: 'rgba(83, 83, 83, 0.1)', // Using the orange color from your theme
+    transform: [{ scale: 1.2 }],
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5,
   },
 });
