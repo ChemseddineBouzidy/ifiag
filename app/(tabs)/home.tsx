@@ -2,7 +2,7 @@ import { useUserStore } from '@/store/userStore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { Button, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { LOGIN_ROUTE } from '../constants/routes';
 const home = () => {
   const user = useUserStore(state => state.user);
@@ -26,12 +26,12 @@ const home = () => {
     }
   };
   return (
-  
+    <SafeAreaView>
     <View>
       <Text>home {user.first_name}</Text>
       <Button title="Logout" onPress={logout} />
     </View>
- 
+    </SafeAreaView>
   )
 }
 
