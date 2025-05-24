@@ -100,7 +100,7 @@ export default function Login() {
     }
 
     const handleSignUp = () => {
-        console.log('Sign up pressed');
+        router.replace("/auth/SignUp");
     };
 
     const handleForgotPassword = () => {
