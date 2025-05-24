@@ -104,7 +104,7 @@ export default function Login() {
     };
 
     const handleForgotPassword = () => {
-        router.replace("/home");
+        router.replace("/auth/tets");
         console.log('Forgot password pressed');
     };
 

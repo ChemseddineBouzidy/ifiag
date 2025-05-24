@@ -5,15 +5,14 @@ import * as ImagePicker from 'expo-image-picker';
 import React, { useState } from 'react';
 import {
   Alert,
-  Button,
   Image,
+  ImageBackground,
   Platform,
-  ScrollView,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  View,
+  View
 } from 'react-native';
 import { z } from 'zod';
 
@@ -152,11 +151,11 @@ const StudentSignUpFlow = () => {
           }
         }
   
-        if (formData.photo && formData.photo.uri) {
+        if (formData.photo) {
           form.append('photo', {
-            uri: formData.photo.uri,
-            name: formData.photo.name || 'photo.jpg',
-            type: formData.photo.type || 'image/jpeg',
+            uri: formData.photo,
+            name: 'photo.jpg',
+            type: 'image/jpeg',
           } as any);
         }
   
@@ -171,10 +170,8 @@ const StudentSignUpFlow = () => {
         });
   
         if (!response.ok) {
-          const errorData = await response.json();
-         
-          console.log( errorData.errors.email)
-          throw new Error(errorData.errors.email|| 'Failed to create student account');
+          const errText = await response.text();
+          throw new Error(`Failed to create student account: ${errText}`);
         }
   
         const data = await response.json();
@@ -191,7 +188,7 @@ const StudentSignUpFlow = () => {
                 onPress: () => {
                   setCurrentStep(1);
                   setFormData({
-                    first_name: '', last_name: '', email: '', password: '', phone: '', photo: { uri: null, type: null, name: null },
+                    first_name: '', last_name: '', email: '', password: '', phone: '', photo: '',
                     birth_date: '', gender: '', birth_place: '', address: '',
                     class: '', field: '', enrollment_date: '', description: ''
                   });
@@ -361,10 +358,25 @@ const StudentSignUpFlow = () => {
 
       <View style={styles.inputGroup}>
         <Text style={styles.label}>Profile Photo (Optional)</Text>
-        <View style={styles.container}>
-          <Button title="Pick an image from camera roll" onPress={pickImage} />
-          {image && <Image source={{ uri: image }} style={styles.image} />}
-        </View>
+        <TouchableOpacity style={styles.photoButton} onPress={pickImage}>
+          {formData.photo ? (
+            <View style={styles.photoContainer}>
+              <Image source={{ uri: formData.photo }} style={styles.photoPreview} />
+              <TouchableOpacity 
+                style={styles.removeButton}
+                onPress={() => updateFormData('photo', '')}
+              >
+                <Text style={styles.removeButtonText}>Remove</Text>
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <View style={styles.photoPlaceholder}>
+              <Text style={styles.photoPlaceholderText}>+</Text>
+              <Text style={styles.photoText}>Add Photo</Text>
+              <Text style={styles.photoSubtext}>JPG or PNG</Text>
+            </View>
+          )}
+        </TouchableOpacity>
         {errors.photo && <Text style={styles.errorText}>{errors.photo}</Text>}
       </View>
     </View>
@@ -376,6 +388,7 @@ const StudentSignUpFlow = () => {
       <Text style={styles.stepSubtitle}>Additional personal information</Text>
 
       <View style={styles.inputGroup}>
+        
         <Text style={styles.label}>Birth Date *</Text>
         <TouchableOpacity
           style={[styles.input, styles.dateInput, errors.birth_date && styles.inputError]}
@@ -537,298 +550,358 @@ const StudentSignUpFlow = () => {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Student Registration</Text>
-        <Text style={styles.subtitle}>Create your student account</Text>
-        
-      </View>
-      {renderProgressBar()}
-      {currentStep === 1 && renderStep1()}
-      {currentStep === 2 && renderStep2()}
-      {currentStep === 3 && renderStep3()}
-{renderProgressBar()}
-      <View style={styles.buttonContainer}>
-        {currentStep > 1 && (
-          <TouchableOpacity style={styles.backButton} onPress={handleBack}>
-            <Text style={styles.backButtonText}>Back</Text>
-          </TouchableOpacity>
-        )}
+   <ImageBackground
+source={require('../../assets/images/login.png')} // Replace with your image path
+style={styles.backgroundImage}
+resizeMode="cover"
+>
+{/* <ScrollView style={styles.container}> */}
+{/* <View style={styles.header}>
+<Text style={styles.title}>Student Registration</Text>
+<Text style={styles.subtitle}>Create your student account</Text>
 
-        {currentStep < 3 ? (
-          <TouchableOpacity
-            style={[styles.nextButton, currentStep === 1 && styles.fullWidthButton]}
-            onPress={handleNext}
-          >
-            <Text style={styles.nextButtonText}>Next</Text>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-            <Text style={styles.submitButtonText}>Create Account</Text>
-          </TouchableOpacity>
-        )}
-      </View>
-    </ScrollView>
+</View> */}
+<View style={styles.stepsContainer}>
+{renderProgressBar()}
+<View style={styles.stepContent}>
+{currentStep === 1 && renderStep1()}
+{currentStep === 2 && renderStep2()}
+{currentStep === 3 && renderStep3()}
+</View>
+</View>
+{/* {renderProgressBar()} */}
+<View style={styles.buttonContainer}>
+{currentStep > 1 && (
+<TouchableOpacity style={styles.backButton} onPress={handleBack}>
+<Text style={styles.backButtonText}>Back</Text>
+</TouchableOpacity>
+)}
+
+{currentStep < 3 ? (
+<TouchableOpacity
+style={[styles.nextButton, currentStep === 1 && styles.fullWidthButton]}
+onPress={handleNext}
+>
+<Text style={styles.nextButtonText}>Next</Text>
+</TouchableOpacity>
+) : (
+<TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+<Text style={styles.submitButtonText}>Create Account</Text>
+</TouchableOpacity>
+)}
+</View>
+{/* </ScrollView> */}
+</ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
-  },
-  header: {
-    backgroundColor: '#FA6407',
-    paddingTop: 60,
-    paddingHorizontal: 20,
-    paddingBottom: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-    textAlign: 'center',
-    marginBottom: 4,
-  },
-  subtitle: {
-    fontSize: 14,
-    color: '#DBEAFE',
-    textAlign: 'center',
-    marginBottom: 20,
-  },
-  progressContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 10,
-  },
-  progressStep: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  progressCircle: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 2,
-  },
-  progressActive: {
-    backgroundColor: '#FFFFFF',
-    borderColor: '#FFFFFF',
-  },
-  progressInactive: {
-    backgroundColor: 'transparent',
-    borderColor: '#DBEAFE',
-  },
-  progressText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  progressTextActive: {
-    color: '#FA6407',
-  },
-  progressTextInactive: {
-    color: '#DBEAFE',
-  },
-  progressLine: {
-    width: 30,
-    height: 2,
-    marginHorizontal: 5,
-  },
-  stepContainer: {
-    padding: 20,
-  },
-  stepTitle: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#1F2937',
-    marginBottom: 8,
-    textAlign: 'center',
-  },
-  stepSubtitle: {
-    fontSize: 14,
-    color: '#6B7280',
-    marginBottom: 30,
-    textAlign: 'center',
-  },
-  inputGroup: {
-    marginBottom: 20,
-  },
-  label: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#374151',
-    marginBottom: 8,
-  },
-  input: {
-    backgroundColor: '#FFFFFF',
-    borderWidth: 1,
-    borderColor: '#D1D5DB',
-    borderRadius: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    fontSize: 16,
-    color: '#1F2937',
-  },
-  inputError: {
-    borderColor: '#EF4444',
-  },
-  textArea: {
-    height: 80,
-    textAlignVertical: 'top',
-  },
-  errorText: {
-    color: '#EF4444',
-    fontSize: 12,
-    marginTop: 4,
-  },
-  dateInput: {
-    justifyContent: 'center',
-  },
-  dateText: {
-    fontSize: 16,
-    color: '#1F2937',
-  },
-  placeholderText: {
-    color: '#9CA3AF',
-  },
-  radioGroup: {
-    flexDirection: 'row',
-    gap: 20,
-  },
-  radioButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  radioCircle: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    borderWidth: 2,
-    borderColor: '#D1D5DB',
-    marginRight: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  radioSelected: {
-    borderColor: '#3B82F6',
-  },
-  radioDot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    backgroundColor: '#3B82F6',
-  },
-  radioLabel: {
-    fontSize: 16,
-    color: '#1F2937',
-  },
-  photoButton: {
-    backgroundColor: '#FFFFFF',
-    borderWidth: 2,
-    borderColor: '#D1D5DB',
-    borderStyle: 'dashed',
-    borderRadius: 8,
-    padding: 20,
-    alignItems: 'center',
-  },
-  photoPreview: {
-    alignItems: 'center',
-  },
-  photoImage: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    marginBottom: 8,
-  },
-  photoPlaceholder: {
-    alignItems: 'center',
-  },
-  photoPlaceholderText: {
-    fontSize: 32,
-    marginBottom: 8,
-  },
-  photoText: {
-    fontSize: 14,
-    color: '#6B7280',
-    fontWeight: '500',
-  },
-  photoSubtext: {
-    fontSize: 12,
-    color: '#9CA3AF',
-    marginTop: 4,
-  },
-  fieldContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-  },
-  fieldChip: {
-    backgroundColor: '#FFFFFF',
-    borderWidth: 1,
-    borderColor: '#D1D5DB',
-    borderRadius: 20,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-  },
-  fieldChipSelected: {
-    backgroundColor: '#3B82F6',
-    borderColor: '#3B82F6',
-  },
-  fieldText: {
-    color: '#6B7280',
-    fontSize: 12,
-  },
-  fieldTextSelected: {
-    color: '#FFFFFF',
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    paddingHorizontal: 20,
-    paddingBottom: 40,
-    gap: 12,
-  },
-  backButton: {
-    flex: 1,
-    backgroundColor: '#6B7280',
-    paddingVertical: 15,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  backButtonText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  nextButton: {
-    flex: 1,
-    backgroundColor: '#3B82F6',
-    paddingVertical: 15,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  nextButtonText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  submitButton: {
-    flex: 1,
-    backgroundColor: '#10B981',
-    paddingVertical: 15,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  submitButtonText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  fullWidthButton: {
-    flex: 1,
-  },
+backgroundImage: {
+width: '100%',
+height: '100%',
+},
+image: {
+  width: 100,
+  height: 100,
+  resizeMode: 'cover',
+  borderRadius: 50,
+  marginVertical: 10,
+},
+container: {
+flex: 1,
+marginTop: 14,
+
+backgroundColor: '#FFFFFF',
+},
+header: {
+backgroundColor: '#FA6407',
+paddingTop: 60,
+paddingHorizontal: 20,
+paddingBottom: 20,
+},
+title: {
+fontSize: 24,
+fontWeight: 'bold',
+color: '#FFFFFF',
+textAlign: 'center',
+},
+subtitle: {
+fontSize: 14,
+color: '#DBEAFE',
+textAlign: 'center',
+marginBottom: 20,
+},
+progressContainer: {
+flexDirection: 'row',
+justifyContent: 'center',
+alignItems: 'center',
+marginTop: 20,
+},
+progressStep: {
+flexDirection: 'row',
+alignItems: 'center',
+},
+progressCircle: {
+width: 40,
+height: 40,
+borderRadius: 20,
+justifyContent: 'center',
+alignItems: 'center',
+borderWidth: 2,
+},
+progressActive: {
+backgroundColor: '#FFFFFF',
+borderColor: '#FFFFFF',
+},
+progressInactive: {
+backgroundColor: 'transparent',
+borderColor: '#DBEAFE',
+},
+progressText: {
+fontSize: 16,
+fontWeight: 'bold',
+},
+progressTextActive: {
+color: '#FA6407',
+},
+progressTextInactive: {
+color: '#DBEAFE',
+},
+progressLine: {
+width: 30,
+height: 2,
+marginHorizontal: 5,
+},
+stepContainer: {
+padding: 20,
+},
+stepTitle: {
+fontSize: 22,
+fontWeight: 'bold',
+color: '#1F2937',
+marginBottom: 8,
+textAlign: 'center',
+},
+stepSubtitle: {
+fontSize: 14,
+color: '#6B7280',
+marginBottom: 30,
+textAlign: 'center',
+},
+inputGroup: {
+marginBottom: 20,
+},
+label: {
+fontSize: 14,
+fontWeight: '600',
+color: '#374151',
+marginBottom: 8,
+},
+input: {
+backgroundColor: '#FFFFFF',
+borderWidth: 1,
+borderColor: '#D1D5DB',
+borderRadius: 8,
+paddingHorizontal: 16,
+paddingVertical: 12,
+fontSize: 16,
+color: '#1F2937',
+},
+inputError: {
+borderColor: '#EF4444',
+},
+textArea: {
+height: 80,
+textAlignVertical: 'top',
+},
+errorText: {
+color: '#EF4444',
+fontSize: 12,
+marginTop: 4,
+},
+dateInput: {
+justifyContent: 'center',
+},
+dateText: {
+fontSize: 16,
+color: '#1F2937',
+},
+placeholderText: {
+color: '#9CA3AF',
+},
+radioGroup: {
+flexDirection: 'row',
+gap: 20,
+},
+radioButton: {
+flexDirection: 'row',
+alignItems: 'center',
+},
+radioCircle: {
+width: 20,
+height: 20,
+borderRadius: 10,
+borderWidth: 2,
+borderColor: '#D1D5DB',
+marginRight: 8,
+justifyContent: 'center',
+alignItems: 'center',
+},
+radioSelected: {
+borderColor: '#3B82F6',
+},
+radioDot: {
+width: 10,
+height: 10,
+borderRadius: 5,
+backgroundColor: '#3B82F6',
+},
+radioLabel: {
+fontSize: 16,
+color: '#1F2937',
+},
+photoButton: {
+backgroundColor: '#FFFFFF',
+borderWidth: 2,
+borderColor: '#D1D5DB',
+borderStyle: 'dashed',
+borderRadius: 8,
+padding: 20,
+alignItems: 'center',
+},
+// photoPreview: {
+// alignItems: 'center',
+// },
+photoImage: {
+width: 80,
+height: 80,
+borderRadius: 40,
+marginBottom: 8,
+},
+photoPlaceholder: {
+alignItems: 'center',
+},
+photoPlaceholderText: {
+fontSize: 32,
+marginBottom: 8,
+},
+photoText: {
+fontSize: 14,
+color: '#6B7280',
+fontWeight: '500',
+},
+photoSubtext: {
+fontSize: 12,
+color: '#9CA3AF',
+marginTop: 4,
+},
+fieldContainer: {
+flexDirection: 'row',
+flexWrap: 'wrap',
+gap: 8,
+},
+fieldChip: {
+backgroundColor: '#FFFFFF',
+borderWidth: 1,
+borderColor: '#D1D5DB',
+borderRadius: 20,
+paddingHorizontal: 12,
+paddingVertical: 8,
+},
+fieldChipSelected: {
+backgroundColor: '#3B82F6',
+borderColor: '#3B82F6',
+},
+fieldText: {
+color: '#6B7280',
+fontSize: 12,
+},
+fieldTextSelected: {
+color: '#FFFFFF',
+},
+buttonContainer: {
+flexDirection: 'row',
+paddingHorizontal: 20,
+paddingBottom: 40,
+gap: 12,
+},
+backButton: {
+flex: 1,
+backgroundColor: '#6B7280',
+paddingVertical: 15,
+borderRadius: 8,
+alignItems: 'center',
+},
+backButtonText: {
+color: '#FFFFFF',
+fontSize: 16,
+fontWeight: '600',
+},
+nextButton: {
+flex: 1,
+backgroundColor: '#3B82F6',
+paddingVertical: 15,
+borderRadius: 8,
+alignItems: 'center',
+},
+nextButtonText: {
+color: '#FFFFFF',
+fontSize: 16,
+fontWeight: '600',
+},
+submitButton: {
+flex: 1,
+backgroundColor: '#10B981',
+paddingVertical: 15,
+borderRadius: 8,
+alignItems: 'center',
+},
+submitButtonText: {
+color: '#FFFFFF',
+fontSize: 16,
+fontWeight: '600',
+},
+fullWidthButton: {
+flex: 1,
+},
+stepContent: {
+flex: 1,
+paddingHorizontal: 20,
+paddingTop: 20,
+},
+stepsContainer: {
+flex: 1,
+paddingTop: 60,
+},
+photoButtonText: {
+color: '#3B82F6',
+fontSize: 14,
+fontWeight: '500',
+width: '100%'
+},
+photoContainer: {
+flexDirection: 'row',
+alignItems: 'center',
+gap: 12,
+},
+previewContainer: {
+flexDirection: 'row',
+alignItems: 'center',
+gap: 8,
+},
+photoPreview: {
+width: 60,
+height: 60,
+borderRadius: 30,
+},
+removeButton: {
+padding: 8,
+},
+removeButtonText: {
+color: '#EF4444',
+fontSize: 14,
+fontWeight: '500',
+},
 });
 
 export default StudentSignUpFlow;
