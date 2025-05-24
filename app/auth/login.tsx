@@ -1,4 +1,7 @@
+import { useUserStore } from '@/store/userStore';
 import { Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { router } from 'expo-router';
 import React, { useState } from 'react';
 import {
     KeyboardAvoidingView,
@@ -24,6 +27,7 @@ export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const [errors, setErrors] = useState<LoginErrors>({});
     const [generalError, setGeneralError] = useState<string>('');
+    const { setUserAndStudent } = useUserStore();
 
 
     const schema = z.object({
@@ -56,6 +60,7 @@ export default function Login() {
 
         setErrors({});
         setGeneralError('');
+
         try {
             const response = await fetch(url, {
                 method: "POST",
@@ -75,17 +80,23 @@ export default function Login() {
             }
             
             const data = await response.json();
-            console.log('Login successful:', data);
-            // Handle successful login here
-            // For example, store the token, navigate to home screen, etc.
+            console.log('Login successful:', data.data.access_token);
+            await AsyncStorage.setItem('access_token', data.data.access_token);
+            // router.replace('/home');
+            const profileResponse = await fetch('https://ifiag.pidefood.com/api/auth/profile', {
+                headers: { Authorization: `Bearer ${data.data.access_token}` },
+              });
+              const profileData = await profileResponse.json();
             
-        } catch (error : any) {
+              setUserAndStudent({
+                user: profileData.data.user,
+                student: profileData.data.student,
+              });
+              router.replace('/home');
+            
+        } catch (error) {
             console.error('Login failed:', error);
-            
-            if (error.response?.status === 401) {
-                setErrors(error.response.data.errors);
-                console.error('Login failed:', error.response.data.errors);
-            }
+            setGeneralError('An error occurred during login. Please try again.');
         }
     }
 
