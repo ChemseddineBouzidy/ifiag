@@ -1,9 +1,11 @@
 import { useUserStore } from '@/store/userStore';
+import { BASE_URL } from '@env';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Button, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { LOGIN_ROUTE } from '../constants/routes';
+
 const home = () => {
   const user = useUserStore(state => state.user);
   const [checking, setChecking] = useState(true);
@@ -18,6 +20,17 @@ const home = () => {
   }
   const logout = async () => {
     try {
+      const token =await AsyncStorage.getItem('access_token');  
+      if(token){
+        await fetch(`${BASE_URL}/api/auth/logout`,{
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+      }
+
       await AsyncStorage.removeItem('access_token');  
       useUserStore.getState().logout();  
       router.replace('/auth/login');                   

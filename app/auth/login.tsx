@@ -1,4 +1,5 @@
 import { useUserStore } from '@/store/userStore';
+import { BASE_URL } from '@env';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
@@ -16,6 +17,7 @@ import {
 } from 'react-native';
 import { z } from 'zod';
 import { HOME_ROUTE } from '../constants/routes'; // adjust path as needed
+
 interface LoginErrors {
     email?: string;
     password?: string;
@@ -82,7 +84,7 @@ export default function Login() {
             console.log('Login successful:', data.data.access_token);
             await AsyncStorage.setItem('access_token', data.data.access_token);
             // router.replace('/home');
-            const profileResponse = await fetch('https://ifiag.pidefood.com/api/auth/profile', {
+            const profileResponse = await fetch(`${BASE_URL}/api/auth/profile`, {
                 headers: { Authorization: `Bearer ${data.data.access_token}` },
             });
             const profileData = await profileResponse.json();
@@ -100,7 +102,7 @@ export default function Login() {
     }
 
     const handleSignUp = () => {
-        router.replace("/auth/SignUp");
+        router.push("/auth/SignUp");
     };
 
     const handleForgotPassword = () => {

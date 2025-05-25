@@ -8,6 +8,7 @@ import {
   Image,
   ImageBackground,
   Platform,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -555,15 +556,15 @@ source={require('../../assets/images/login.png')} // Replace with your image pat
 style={styles.backgroundImage}
 resizeMode="cover"
 >
-{/* <ScrollView style={styles.container}> */}
+<ScrollView >
 {/* <View style={styles.header}>
 <Text style={styles.title}>Student Registration</Text>
 <Text style={styles.subtitle}>Create your student account</Text>
 
 </View> */}
 <View style={styles.stepsContainer}>
-{renderProgressBar()}
 <View style={styles.stepContent}>
+{renderProgressBar()}
 {currentStep === 1 && renderStep1()}
 {currentStep === 2 && renderStep2()}
 {currentStep === 3 && renderStep3()}
@@ -590,7 +591,7 @@ onPress={handleNext}
 </TouchableOpacity>
 )}
 </View>
-{/* </ScrollView> */}
+</ScrollView>
 </ImageBackground>
   );
 };
@@ -639,6 +640,7 @@ marginTop: 20,
 },
 progressStep: {
 flexDirection: 'row',
+color:"#00112B",
 alignItems: 'center',
 },
 progressCircle: {
@@ -650,22 +652,22 @@ alignItems: 'center',
 borderWidth: 2,
 },
 progressActive: {
-backgroundColor: '#FFFFFF',
-borderColor: '#FFFFFF',
+backgroundColor: '#FA6407',
+borderColor: '#fff',
 },
 progressInactive: {
 backgroundColor: 'transparent',
-borderColor: '#DBEAFE',
+borderColor: '#FA6407',
 },
 progressText: {
 fontSize: 16,
 fontWeight: 'bold',
 },
 progressTextActive: {
-color: '#FA6407',
+color: '#fff',
 },
 progressTextInactive: {
-color: '#DBEAFE',
+color: '#FA6407',
 },
 progressLine: {
 width: 30,
@@ -839,7 +841,7 @@ fontWeight: '600',
 },
 nextButton: {
 flex: 1,
-backgroundColor: '#3B82F6',
+backgroundColor: '#00112B',
 paddingVertical: 15,
 borderRadius: 8,
 alignItems: 'center',
@@ -851,7 +853,7 @@ fontWeight: '600',
 },
 submitButton: {
 flex: 1,
-backgroundColor: '#10B981',
+backgroundColor: '#00112B',
 paddingVertical: 15,
 borderRadius: 8,
 alignItems: 'center',
