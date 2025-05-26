@@ -35,9 +35,7 @@ export default function Login() {
         email: z.string().email("Invalid email"),
         password: z.string().min(6, "Password must be at least 6 characters"),
     });
-    const url = new URL(
-        "https://ifiag.pidefood.com/api/auth/login"
-    );
+
 
     const headers = {
         "Content-Type": "application/json",
@@ -63,7 +61,7 @@ export default function Login() {
         setGeneralError('');
 
         try {
-            const response = await fetch(url, {
+            const response = await fetch(`${BASE_URL}/api/auth/login`, {
                 method: "POST",
                 headers,
                 body: JSON.stringify({
