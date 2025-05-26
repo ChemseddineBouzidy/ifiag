@@ -69,6 +69,16 @@ const ListStudents = () => {
         keyExtractor={(item) => item.id.toString()}
         numColumns={grid ? 2 : 1}
         contentContainerStyle={styles.listContainer}
+        initialNumToRender={5}
+        maxToRenderPerBatch={5}
+        windowSize={5}
+        onEndReached={list}
+        onEndReachedThreshold={0.5}
+        ListFooterComponent={() => (
+          <View style={styles.loadingContainer}>
+            <Text style={styles.loadingText}>Loading more...</Text>
+          </View>
+        )}
       />
     </SafeAreaView>
   )
@@ -109,5 +119,13 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+  },
+  loadingContainer: {
+    padding: 10,
+    alignItems: 'center',
+  },
+  loadingText: {
+    fontSize: 14,
+    color: '#666',
   },
 })

@@ -218,6 +218,8 @@ const styles = StyleSheet.create({
     },
     keyboardAvoid: {
         flex: 1,
+
+        
     },
     content: {
         flex: 1,
@@ -333,5 +335,6 @@ const styles = StyleSheet.create({
     backgroundImage: {
         width: '100%',
         height: '100%',
+
       },
 });
