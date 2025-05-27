@@ -19,10 +19,10 @@ const Header = ({ grid, setGrid }: any) => {
         />
       </View>
       
-      <View style={styles.searchBar}>
+      <View style={[styles.searchBar, { backgroundColor: 'fff' }]}>
         <TextInput
           style={styles.searchInput}
-          placeholder="JHON"
+          placeholder="Search un etudiant.."
           placeholderTextColor="#999"
         />
         <TouchableOpacity style={styles.searchButton}>

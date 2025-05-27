@@ -74,9 +74,7 @@ const ListStudents = () => {
   return (
     <SafeAreaView style={styles.container}>
       <Header grid={grid} setGrid={setGrid} />
-      <View style={styles.header}>
-        <Text style={styles.title}>List Students</Text>
-      </View>
+   
 
       {errors && (
         <View style={styles.errorBox}>
@@ -118,7 +116,7 @@ export default ListStudents;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#fff',
   },
   header: {
     padding: 16,
