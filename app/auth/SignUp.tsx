@@ -1,4 +1,3 @@
-import { BASE_URL } from '@env';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import * as ImagePicker from 'expo-image-picker';
@@ -46,6 +45,7 @@ const step3Schema = z.object({
 });
 
 const StudentSignUpFlow = () => {
+  const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL;
   const [image, setImage] = useState<string | null>(null);
   const [currentStep, setCurrentStep] = useState(1);
   const [showDatePicker, setShowDatePicker] = useState({ birth: false, enrollment: false });

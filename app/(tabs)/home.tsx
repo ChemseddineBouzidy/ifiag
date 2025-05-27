@@ -1,5 +1,4 @@
 import { useUserStore } from '@/store/userStore';
-import { BASE_URL } from '@env';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
@@ -7,6 +6,7 @@ import { Button, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { LOGIN_ROUTE } from '../constants/routes';
 
 const home = () => {
+  const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL;
   const user = useUserStore(state => state.user);
   const [checking, setChecking] = useState(true);
   useEffect(() => {

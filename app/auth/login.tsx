@@ -1,5 +1,5 @@
 import { useUserStore } from '@/store/userStore';
-import { BASE_URL } from '@env';
+
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
@@ -24,6 +24,8 @@ interface LoginErrors {
 }
 
 export default function Login() {
+    const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL;
+
     const [email, setEmail] = useState<string>('john.doe@ifiag.com');
     const [password, setPassword] = useState<string>('password123');
     const [showPassword, setShowPassword] = useState(false);
