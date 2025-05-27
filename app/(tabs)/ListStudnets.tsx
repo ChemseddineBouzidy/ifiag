@@ -7,9 +7,8 @@ import {
   Text,
   View
 } from 'react-native';
-import GridList from '../components/GridList';
-import Header from '../components/Header';
-import StudentCardsList from './test';
+import GridList from '../../src/components/GridList';
+import Header from '../../src/components/Header';
 
 const ListStudents = () => {
   const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL;
@@ -88,7 +87,9 @@ const ListStudents = () => {
         renderItem={({ item }) => (
           <>
             {!grid ? (
-              <StudentCardsList />
+              <View>
+                <Text>t</Text>
+              </View>
             ) : (
               <GridList student={item} />
             )}

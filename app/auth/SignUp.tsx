@@ -50,7 +50,8 @@ const StudentSignUpFlow = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [showDatePicker, setShowDatePicker] = useState({ birth: false, enrollment: false });
   const [formData, setFormData] = useState<any>({
-    // Step 1 
+    
+    
     first_name: 'test',
     last_name: 'test',
     email: 'test@test.com',
@@ -58,13 +59,13 @@ const StudentSignUpFlow = () => {
     phone: '',
     photo: null,
 
-    // Step 2 
+   
     birth_date: '2003-01-01',
     gender: 'Male',
     birth_place: 'casa',
     address: 'casa',
 
-    // Step 3 
+  
     class: 'casa',
     field: 'compture',
     enrollment_date: new Date().toISOString().split('T')[0],
@@ -73,7 +74,7 @@ const StudentSignUpFlow = () => {
 
   const [errors, setErrors] = useState<any>({});
 
-  const validateStep = (step) => {
+  const validateStep = (step: any) => {
     try {
       let schema;
       let dataToValidate;
@@ -116,7 +117,7 @@ const StudentSignUpFlow = () => {
       return true;
     } catch (error) {
       if (error instanceof z.ZodError) {
-        const newErrors = {};
+        const newErrors = {} as any;
         error.errors.forEach((err) => {
           newErrors[err.path[0]] = err.message;
         });
@@ -160,12 +161,10 @@ const StudentSignUpFlow = () => {
           } as any);
         }
   
-        // Important: ne PAS mettre Content-Type, fetch le gère
         const response = await fetch(`${BASE_URL}/api/auth/register`, {
           method: 'POST',
           headers: {
             Accept: 'application/json',
-            // Content-Type NE PAS METTRE
           },
           body: form,
         });

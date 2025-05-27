@@ -1,3 +1,4 @@
+import { Routes } from '@/src/constants/routes';
 import { useUserStore } from '@/store/userStore';
 
 import { Ionicons } from '@expo/vector-icons';
@@ -16,7 +17,6 @@ import {
     View
 } from 'react-native';
 import { z } from 'zod';
-import { HOME_ROUTE } from '../constants/routes'; // adjust path as needed
 
 interface LoginErrors {
     email?: string;
@@ -93,7 +93,7 @@ export default function Login() {
                 user: profileData.data.user,
                 student: profileData.data.student,
             });
-            router.replace(HOME_ROUTE);
+            router.replace(Routes.HOME_ROUTE as any);
 
         } catch (error) {
             console.error('Login failed:', error);
@@ -106,7 +106,7 @@ export default function Login() {
     };
 
     const handleForgotPassword = () => {
-        router.replace("/auth/tets");
+        // router.replace("/auth/tets");
         console.log('Forgot password pressed');
     };
 

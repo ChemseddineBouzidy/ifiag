@@ -1,17 +1,19 @@
+import { Routes } from '@/src/constants/routes';
 import { useUserStore } from '@/store/userStore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Button, SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import { LOGIN_ROUTE } from '../constants/routes';
 
-const home = () => {
+const Home = () => {
   const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL;
   const user = useUserStore(state => state.user);
   const [checking, setChecking] = useState(true);
+
+
   useEffect(() => {
     if (!user) {
-      router.replace(LOGIN_ROUTE);
+      router.replace(Routes.LOGIN_ROUTE as any);
     }
     setChecking(false);
   }, [user]);
@@ -41,13 +43,13 @@ const home = () => {
   return (
     <SafeAreaView>
     <View>
-      <Text>home {user.first_name}</Text>
+      <Text>Home {user.first_name}</Text>
       <Button title="Logout" onPress={logout} />
     </View>
     </SafeAreaView>
   )
 }
 
-export default home
+export default Home
 
 const styles = StyleSheet.create({})
