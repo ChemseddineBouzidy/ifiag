@@ -1,4 +1,3 @@
-import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from 'react';
 import {
@@ -6,7 +5,6 @@ import {
   SafeAreaView,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View
 } from 'react-native';
 import GridList from '../components/GridList';
@@ -15,7 +13,7 @@ import StudentCardsList from './test';
 
 const ListStudents = () => {
   const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL;
-  const [grid, setGrid] = useState(false);
+  const [grid, setGrid] = useState<any>(false);
   const [students, setStudents] = useState<any[]>([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
@@ -75,20 +73,9 @@ const ListStudents = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header />
+      <Header grid={grid} setGrid={setGrid} />
       <View style={styles.header}>
         <Text style={styles.title}>List Students</Text>
-        <TouchableOpacity style={styles.gridToggle} onPress={() => setGrid(!grid)}>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Ionicons
-              name={grid ? 'list-outline' : 'grid-outline'}
-              size={20}
-              color="white"
-              style={{ marginRight: 5 }}
-            />
-            <Text style={styles.gridToggleText}>{grid ? 'List View' : 'Grid View'}</Text>
-          </View>
-        </TouchableOpacity>
       </View>
 
       {errors && (
@@ -150,19 +137,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: '600',
     letterSpacing: 0.5,
-  },
-  gridToggle: {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 24,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.3)',
-  },
-  gridToggleText: {
-    color: '#fff',
-    fontSize: 14,
-    fontWeight: '500',
   },
   listContainer: {
     padding: 12,

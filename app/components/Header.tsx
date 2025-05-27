@@ -8,7 +8,8 @@ import {
     View
 } from 'react-native';
 
-const Header = () => {
+
+const Header = ({ grid, setGrid }: any) => {
   return (
     <View style={styles.container}>
       <View style={styles.profilePic}>
@@ -33,8 +34,15 @@ const Header = () => {
         <TouchableOpacity style={styles.iconButton}>
           <Ionicons name="swap-vertical" size={20} color="#FFA909" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.iconButton}>
-          <Ionicons name="list" size={20} color="#FFA909" />
+        <TouchableOpacity 
+          style={styles.iconButton}
+          onPress={() => setGrid(!grid)}
+        >
+          <Ionicons 
+            name={!grid ? "grid" : "list"} 
+            size={20} 
+            color="#FFA909" 
+          />
         </TouchableOpacity>
       </View>
     </View>
@@ -48,23 +56,25 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   profilePic: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 50,
+    height: 50,
+    borderRadius: 50,
     overflow: 'hidden',
     backgroundColor: '#f5f5f5',
+    borderWidth: 2,
+    borderColor: '#FFA909',
   },
   profileImage: {
-    width: 40,
-    height: 40,
+    width: 50,
+    height: 50,
     borderRadius: 20,
   },
   searchBar: {
     flexDirection: 'row',
     alignItems: 'center',
     marginLeft: 10,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 169, 9, 1)',    
+    borderWidth: 2,
+    borderColor: '#FFA909',    
     borderRadius: 20,
     paddingHorizontal: 5,
     paddingVertical: 5,
