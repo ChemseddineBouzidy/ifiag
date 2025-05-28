@@ -17,7 +17,7 @@ const GridList = ({ student }: any) => {
     return `rgb(${r}, ${g}, ${b})`;
   };
 const getAvatar = () =>{
-  return <Text style={styles.avatarImage}>{student.user.first_name.charAt(0, 3).toUpperCase()} {student.user.last_name.charAt(0, 3).toUpperCase()}</Text>
+  return <Text style={styles.avatarText}>{student.user.first_name.charAt(0, 3).toUpperCase()} {student.user.last_name.charAt(0, 3).toUpperCase()}</Text>
          
 }
   const onCall = () => {
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
   avatarText: {
     color: 'white',
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: 25
   },
   badge: {
     paddingVertical: 6,
@@ -185,9 +185,9 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   avatarImage: {
-    color:'white',
-    fontWeight:'bold',
-    fontSize:25
+    width: '100%',
+    height: '100%',
+    borderRadius: 35,
   },
 
   name: {

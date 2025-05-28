@@ -9,7 +9,19 @@ import {
 } from 'react-native';
 
 
-const Header = ({ grid, setGrid }: any) => {
+const Header = ({ grid, setGrid, value, onChangeText, data, setData, sortDirection, setSortDirection }: any) => {
+  
+  const trie = () => {
+
+    const sortedData = [...data].sort((a, b) => {
+      const nameA = `${a.user.first_name} ${a.user.last_name}`.toLowerCase();
+      const nameB = `${b.user.first_name} ${b.user.last_name}`.toLowerCase();
+      return sortDirection === 'asc' ? nameA.localeCompare(nameB) : nameB.localeCompare(nameA);
+    });
+    
+    setData(sortedData);
+    setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+  }
   return (
     <View style={styles.container}>
       <View style={styles.profilePic}>
@@ -24,6 +36,8 @@ const Header = ({ grid, setGrid }: any) => {
           style={styles.searchInput}
           placeholder="Search un etudiant.."
           placeholderTextColor="#999"
+        value={value}
+        onChangeText={onChangeText}
         />
         <TouchableOpacity style={styles.searchButton}>
           <Ionicons name="search" size={20} color="#F26407" />
@@ -31,7 +45,7 @@ const Header = ({ grid, setGrid }: any) => {
       </View>
       
       <View style={styles.icons}>
-        <TouchableOpacity style={styles.iconButton}>
+        <TouchableOpacity style={styles.iconButton} onPress={trie}>
           <Ionicons name="swap-vertical" size={20} color="#F26407" />
         </TouchableOpacity>
         <TouchableOpacity 

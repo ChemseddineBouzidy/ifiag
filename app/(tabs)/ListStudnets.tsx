@@ -18,6 +18,10 @@ const ListStudents = () => {
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<any>(null);
+  const [query, setQuery] = useState('');
+  const [search, setSearch] = useState('');
+  const [filteredStudents, setFilteredStudents] = useState<any[]>([]);
+  const [sortDirection, setSortDirection] = useState('asc');
 
   const list = async () => {
     if (loading || !hasMore) return;
@@ -49,8 +53,6 @@ const ListStudents = () => {
       }
 
       const data = await response.json();
-      console.log('Students data:', data);
-
       const newStudents = data.data.data;
       setStudents((prev) => [...prev, ...newStudents]);
       setPage((prev) => prev + 1);
@@ -69,10 +71,38 @@ const ListStudents = () => {
   useEffect(() => {
     list();
   }, []);
+ 
+  useEffect(() => {
+    const timeout = setTimeout(() => setSearch(query), 300);
+    return () => clearTimeout(timeout);
+  }, [query]);
+  
+  useEffect(() => {
+    if (search.trim() === '') {
+      setFilteredStudents(students); 
+      return;
+    }
+  
+    const filtered = students.filter((student) =>
+      `${student.user.first_name} ${student.user.last_name}`.toLowerCase().includes(search.toLowerCase())
+    );
+  
+    setFilteredStudents(filtered);
+  }, [search, students]);
+  
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header grid={grid} setGrid={setGrid} />
+      <Header 
+        grid={grid} 
+        setGrid={setGrid} 
+        value={query}  
+        onChangeText={setQuery}
+        data={filteredStudents}
+        setData={setFilteredStudents}
+        sortDirection={sortDirection}
+        setSortDirection={setSortDirection}
+      />
    
 
       {errors && (
@@ -83,7 +113,8 @@ const ListStudents = () => {
 
       <FlatList
         key={grid ? 'grid' : 'list'}
-        data={students}
+        // data={students}
+        data={filteredStudents}
         renderItem={({ item }) => (
           <>
             {!grid ? (

@@ -17,7 +17,7 @@ const StudentFilters = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [step, setStep] = useState('fields'); // 'fields' or 'students'
-
+  
   const fetchFields = async () => {
     
     setLoading(true);
@@ -58,7 +58,7 @@ const StudentFilters = () => {
     }
   };
 
-  const fetchStudentsByField = async (field) => {
+  const fetchStudentsByField = async ({field}:any ) => {
     console.log('Selected field:', field); // 🐛 Debug line
   
     if (!field) {
@@ -102,7 +102,7 @@ const StudentFilters = () => {
       setLoading(false);
     }
   };
-  
+ 
   return (
     <SafeAreaView>
       <View style={styles.container}>
@@ -132,7 +132,7 @@ const StudentFilters = () => {
               <FlatList
                 data={students}
                 keyExtractor={(item, index) => index.toString()}
-                renderItem={({ item }) => (
+                renderItem={({ item }: any) => (
                   <Text style={styles.item}>{item.user?.last_name || JSON.stringify(item)}</Text>
                 )}
               />
