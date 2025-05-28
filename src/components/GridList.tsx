@@ -1,4 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
 import React from 'react';
 import { Alert, Image, Linking, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
@@ -70,7 +71,7 @@ const getAvatar = () =>{
         
         <TouchableOpacity 
           style={styles.iconButton} 
-          // onPress={onView}
+          onPress={() => router.push(`/Student/${student.user.id}`)}
           activeOpacity={0.7}
         >
           <Ionicons name="eye" size={18} color="#6366f1" />
@@ -136,15 +137,26 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     backgroundColor: '#f0f9ff',
     marginBottom: 16,
+    marginTop: 6,
     borderWidth: 1,
     borderColor: '#e0f2fe',
+    alignSelf: 'center',
+    shadowColor: '#0369a1',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
   },
   badgeText: {
-    fontSize: 11,
+    fontSize: 10,
     color: '#0369a1',
-    fontWeight: '600',
+    fontWeight: '700',
     textTransform: 'uppercase',
     letterSpacing: 0.5,
+    textAlign: 'center',
   },
   actionButtons: {
     flexDirection: 'row',

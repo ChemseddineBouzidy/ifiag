@@ -62,6 +62,7 @@ export default function RootLayout() {
       )}
 
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen name="Student/[id]" options={{ headerShown: false }} />
 
 
       <Stack.Screen name="auth/login" options={{ headerShown: false }} />

@@ -26,7 +26,7 @@ interface LoginErrors {
 export default function Login() {
     const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL;
 
-    const [email, setEmail] = useState<string>('john.doe@ifiag.com');
+    const [email, setEmail] = useState<string>('chemseddinebouzidy@gmail.com');
     const [password, setPassword] = useState<string>('password123');
     const [showPassword, setShowPassword] = useState(false);
     const [errors, setErrors] = useState<LoginErrors>({});
