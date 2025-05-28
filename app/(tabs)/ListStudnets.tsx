@@ -1,5 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import {
   Dimensions,
@@ -148,7 +149,7 @@ const ListStudents = () => {
           </View>
           
           <View style={styles.actionSection}>
-            <TouchableOpacity style={styles.actionButton}>
+            <TouchableOpacity style={styles.actionButton}   onPress={() => router.push(`/Student/${item.user.id}`)}>
               <Text style={styles.actionButtonText}>Voir</Text>
             </TouchableOpacity>
           </View>
@@ -235,60 +236,59 @@ export default ListStudents;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8fafc',
+    backgroundColor: '#f8fafc', 
   },
   listContainer: {
-    padding: 16,
+    paddingHorizontal: 16,
+    paddingTop: 12,
     paddingBottom: 32,
   },
   emptyContainer: {
     flex: 1,
     justifyContent: 'center',
+    alignItems: 'center',
   },
   studentCard: {
     backgroundColor: '#ffffff',
-    borderRadius: 12,
-    marginVertical: 4,
+    borderRadius: 20,
+    marginVertical: 8,
+    padding: 12,
     shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.05,
-    shadowRadius: 3,
-    elevation: 1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.07,
+    shadowRadius: 8,
+    elevation: 4,
     borderWidth: 1,
-    borderColor: '#e2e8f0',
+    borderColor: '#e5e7eb',
   },
   cardContent: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 16,
   },
   avatarSection: {
-    marginRight: 12,
+    marginRight: 16,
     position: 'relative',
   },
   avatar: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#3b82f6', // bleu primaire
   },
   avatarText: {
     color: '#ffffff',
-    fontSize: 16,
-    fontWeight: '600',
-    letterSpacing: 0.5,
+    fontSize: 20,
+    fontWeight: '700',
   },
   statusDot: {
     position: 'absolute',
     bottom: 0,
     right: 0,
-    width: 12,
-    height: 12,
-    borderRadius: 6,
+    width: 14,
+    height: 14,
+    borderRadius: 7,
     backgroundColor: '#10b981',
     borderWidth: 2,
     borderColor: '#ffffff',
@@ -298,69 +298,65 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   studentName: {
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: '600',
-    color: '#1e293b',
+    color: '#1f2937',
     marginBottom: 4,
   },
   badgeContainer: {
-    alignSelf: 'flex-start',
     marginBottom: 4,
   },
   badge: {
     fontSize: 12,
-    color: '#2563eb',
-    backgroundColor: '#eff6ff',
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: 12,
+    color: '#0ea5e9',
+    backgroundColor: '#e0f2fe',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 999,
     fontWeight: '500',
-    overflow: 'hidden',
+    alignSelf: 'flex-start',
   },
   studentEmail: {
-    fontSize: 14,
-    color: '#64748b',
-    fontWeight: '400',
+    fontSize: 13,
+    color: '#6b7280',
   },
   actionSection: {
     marginLeft: 8,
+    justifyContent: 'center',
   },
   actionButton: {
     backgroundColor: '#2563eb',
     paddingHorizontal: 16,
     paddingVertical: 8,
-    borderRadius: 8,
+    borderRadius: 12,
   },
   actionButtonText: {
     color: '#ffffff',
-    fontSize: 14,
-    fontWeight: '500',
+    fontSize: 13,
+    fontWeight: '600',
   },
   separator: {
     height: 8,
   },
   errorContainer: {
     paddingHorizontal: 16,
-    paddingBottom: 8,
+    paddingVertical: 8,
   },
   errorBanner: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#fef2f2',
     padding: 12,
-    borderRadius: 8,
+    borderRadius: 10,
     borderLeftWidth: 4,
-    borderLeftColor: '#ef4444',
-  },
-  errorIcon: {
-    fontSize: 18,
-    marginRight: 8,
+    borderLeftColor: '#dc2626',
   },
   errorText: {
     flex: 1,
-    color: '#dc2626',
+    color: '#b91c1c',
     fontSize: 14,
     fontWeight: '500',
+    marginLeft: 8,
   },
   loadingFooter: {
     paddingVertical: 16,
@@ -368,44 +364,45 @@ const styles = StyleSheet.create({
   },
   loadingIndicator: {
     backgroundColor: '#ffffff',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 999,
     borderWidth: 1,
-    borderColor: '#e2e8f0',
+    borderColor: '#e5e7eb',
   },
   loadingText: {
     fontSize: 14,
-    color: '#64748b',
+    color: '#6b7280',
     fontWeight: '500',
   },
   emptyState: {
     alignItems: 'center',
-    paddingVertical: 60,
+    paddingVertical: 80,
     paddingHorizontal: 32,
   },
   emptyIcon: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    backgroundColor: '#f1f5f9',
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+    backgroundColor: '#e5e7eb',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 16,
   },
   emptyIconText: {
-    fontSize: 28,
+    fontSize: 34,
+    color: '#9ca3af',
   },
   emptyTitle: {
     fontSize: 18,
-    fontWeight: '600',
-    color: '#1e293b',
-    marginBottom: 8,
+    fontWeight: '700',
+    color: '#1f2937',
+    marginBottom: 6,
     textAlign: 'center',
   },
   emptySubtitle: {
     fontSize: 14,
-    color: '#64748b',
+    color: '#6b7280',
     textAlign: 'center',
     lineHeight: 20,
   },

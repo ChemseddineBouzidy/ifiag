@@ -60,8 +60,6 @@ const StudentProfile = () => {
 
   useEffect(() => {
     fetchStudentDetails();
-  // console.log('Student ID:', id);
-  // console.log('Student Data:', studentData.data.address);
   }, [id]);
 
   const formatDate = (dateString: string) => {
@@ -70,22 +68,6 @@ const StudentProfile = () => {
       month: 'short',
       day: 'numeric'
     });
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'active': return '#10b981';
-      case 'inactive': return '#ef4444';
-      case 'suspended': return '#f59e0b';
-      default: return '#6b7280';
-    }
-  };
-
-  const getGradeColor = (grade: string): string => {
-    if (grade.includes('A')) return '#10b981';
-    if (grade.includes('B')) return '#3b82f6';
-    if (grade.includes('C')) return '#f59e0b';
-    return '#ef4444';
   };
 
   const InfoCard = ({ icon, title, value, subtitle }: {
@@ -131,16 +113,6 @@ const StudentProfile = () => {
       </View>
     );
   }
-  const generateColor = (name: string) => {
-    let hash = 0;
-    for (let i = 0; i < name.length; i++) {
-      hash = name.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    const r = (hash & 0xFF0000) >> 16;
-    const g = (hash & 0x00FF00) >> 8;
-    const b = hash & 0x0000FF;
-    return `rgb(${r}, ${g}, ${b})`;
-  };
 const getAvatar = () =>{
   return <Text style={styles.avatarText}>{studentData.user.first_name.charAt(0, 3).toUpperCase()} {studentData.user.last_name.charAt(0, 3).toUpperCase()}</Text>
          
@@ -148,12 +120,11 @@ const getAvatar = () =>{
   const renderProfileTab = () => (
     <ScrollView style={styles.tabContent} showsVerticalScrollIndicator={false}>
       <LinearGradient
-        colors={['#FD8033','#FA6407']}
+        colors={['#FA6407','#FA6407']}
         style={styles.profileHeader}
       >
         <View 
-        // style={styles.profileImageContainer}
-        style={[styles.profileImageContainer, { backgroundColor: generateColor(studentData.user.first_name) }]}
+        style={[styles.profileImageContainer, { backgroundColor: 'white' }]}
         >
         {
     studentData?.user?.photo
@@ -163,10 +134,10 @@ const getAvatar = () =>{
         
         </View>
         <Text style={styles.profileName}> {studentData?.user?.full_name || 'N/A'}</Text>
-        <Text style={styles.profileRole}>field</Text>
+        <Text style={styles.profileRole}>{studentData?.field || 'N/A'}</Text>
         <View style={styles.studentIdContainer}>
           <Icon name="credit-card" size={16} color="#ffffff" />
-          <Text style={styles.studentId}>id</Text>
+          <Text style={styles.studentId}>{studentData?.student_id || 'N/A'}</Text>
         </View>
       </LinearGradient>
 
@@ -200,19 +171,14 @@ const getAvatar = () =>{
           <Text style={styles.sectionTitle}>Academic Information</Text>
         </View>
         <View style={styles.sectionContent}>
-          <DetailRow icon="graduation-cap" label="Class" value={studentData?.class || 'N/A'} />
+          <DetailRow icon="book" label="Class" value={studentData?.class || 'N/A'} />
           <DetailRow icon="bookmark" label="Field of Study" value={studentData?.field || 'N/A'} />
           <DetailRow 
             icon="calendar" 
             label="Enrollment Date" 
             value={studentData?.enrollment_date ? formatDate(studentData?.enrollment_date) : 'N/A'} 
           />
-          <DetailRow 
-            icon="activity" 
-            label="Status" 
-            value={(studentData?.status || 'N/A').toUpperCase()} 
-            color={getStatusColor(studentData?.status || '')}
-          />
+      
         </View>
       </View>
 
@@ -228,41 +194,7 @@ const getAvatar = () =>{
     </ScrollView>
   );
 
-  const renderAcademicTab = () => (
-    <ScrollView style={styles.tabContent} showsVerticalScrollIndicator={false}>
-      <View style={styles.academicOverview}>
-        <View style={styles.overviewCard}>
-          <Icon name="target" size={24} color="#10b981" />
-          <Text style={styles.overviewValue}>{studentData.student?.gpa || 'N/A'}</Text>
-          {/* <Text style={styles.overviewValue}>{studentData.student.gpa}</Text> */}
-          <Text style={styles.overviewLabel}>Current GPA</Text>
-        </View>
-        <View style={styles.overviewCard}>
-          <Icon name="book" size={24} color="#3b82f6" />
-          {/* <Text style={styles.overviewValue}>{studentData.academic.totalCredits}</Text> */}
-          <Text style={styles.overviewLabel}>Total Credits</Text>
-        </View>
-        <View style={styles.overviewCard}>
-          <Icon name="check-circle" size={24} color="#f59e0b" />
-          {/* <Text style={styles.overviewValue}>{studentData.academic.attendance}</Text> */}
-          <Text style={styles.overviewLabel}>Attendance</Text>
-        </View>
-      </View>
 
-
-      <View style={styles.section}>
-        <View style={styles.sectionHeader}>
-          <Icon name="layers" size={20} color="#374151" />
-          <Text style={styles.sectionTitle}>Current Courses</Text>
-        </View>
-        {/* <View style={styles.coursesContainer}>
-          {studentData.academic.courses.map((course, index) => (
-            <CourseCard key={index} course={course} />
-          ))}
-        </View> */}
-      </View>
-    </ScrollView>
-  );
 
   return (
     <View style={styles.container}>
@@ -270,7 +202,10 @@ const getAvatar = () =>{
       
 
       <View style={styles.header}>
-        <TouchableOpacity style={styles.headerButton}>
+        <TouchableOpacity 
+          style={styles.headerButton}
+          onPress={() => router.back()}
+        >
           <Icon name="arrow-left" size={24} color="#ffffff" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Student Profile</Text>
@@ -280,25 +215,7 @@ const getAvatar = () =>{
       </View>
 
 
-      <View style={styles.tabContainer}>
-        <TouchableOpacity 
-          style={[styles.tab, activeTab === 'profile' && styles.activeTab]}
-          onPress={() => setActiveTab('profile')}
-        >
-          <Icon name="user" size={20} color={activeTab === 'profile' ? '#FA6407' : '#6b7280'} />
-          <Text style={[styles.tabText, activeTab === 'profile' && styles.activeTabText]}>Profile</Text>
-        </TouchableOpacity>
-        <TouchableOpacity 
-          style={[styles.tab, activeTab === 'academic' && styles.activeTab]}
-          onPress={() => setActiveTab('academic')}
-        >
-          <Icon name="book-open" size={20} color={activeTab === 'academic' ? '#FA6407' : '#6b7280'} />
-          <Text style={[styles.tabText, activeTab === 'academic' && styles.activeTabText]}>Academic</Text>
-        </TouchableOpacity>
-      </View>
-
-
-      {activeTab === 'profile' ? renderProfileTab() : renderAcademicTab()}
+      {renderProfileTab()}
     </View>
   );
 };
@@ -362,10 +279,25 @@ const styles = StyleSheet.create({
   },
   profileImageContainer: {
     position: 'relative',
-    marginBottom: 16,
+    marginBottom: 6,
+    width: 90,
+    height: 90,
+    borderRadius: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    borderWidth:2,
+    borderColor:'#FA6407',
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   avatarText: {
-    color: 'white',
+    color: '#FA6407',
     fontWeight: 'bold',
     fontSize: 25
   },
@@ -374,7 +306,7 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: 50,
     borderWidth: 4,
-    borderColor: '#ffffff',
+    borderColor: '#FA6407',
   },
   statusDot: {
     position: 'absolute',

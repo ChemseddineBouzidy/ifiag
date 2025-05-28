@@ -1,6 +1,6 @@
 import { useUserStore } from '@/store/userStore';
 import { Ionicons } from '@expo/vector-icons';
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   Image,
   StyleSheet,
@@ -10,11 +10,30 @@ import {
   View
 } from 'react-native';
 
+interface HeaderProps {
+  grid: boolean;
+  setGrid: (value: boolean) => void;
+  value: string;
+  onChangeText: (text: string) => void;
+  data: any[];
+  setData: (data: any[]) => void;
+  sortDirection: 'asc' | 'desc' | null;
+  setSortDirection: (direction: 'asc' | 'desc' | null) => void;
+}
 
-const Header = ({ grid, setGrid, value, onChangeText, data, setData, sortDirection, setSortDirection }: any) => {
+const Header: React.FC<HeaderProps> = ({ 
+  grid, 
+  setGrid, 
+  value, 
+  onChangeText, 
+  data, 
+  setData, 
+  sortDirection, 
+  setSortDirection 
+}) => {
   const user = useUserStore(state => state.user);
-  const trie = () => {
 
+  const sortData = () => {
     const sortedData = [...data].sort((a, b) => {
       const nameA = `${a.user.first_name} ${a.user.last_name}`.toLowerCase();
       const nameB = `${b.user.first_name} ${b.user.last_name}`.toLowerCase();
@@ -23,58 +42,100 @@ const Header = ({ grid, setGrid, value, onChangeText, data, setData, sortDirecti
 
     setData(sortedData);
     setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
-  }
-  const getAvatar = () => {
-    return <Text style={styles.avatarText}>{user.first_name.charAt(0, 3).toUpperCase()} {user.last_name.charAt(0, 3).toUpperCase()}</Text>
-
-  }
-  const generateColor = (name: string) => {
-    const colors = [
-      '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4',
-      '#FFEEAD', '#D4A5A5', '#9B59B6', '#3498DB',
-      '#E67E22', '#2ECC71', '#F1C40F', '#1ABC9C'
-    ];
-    return colors[Math.floor(Math.random() * colors.length)];
   };
+
+  // Génération d'une couleur consistante basée sur le nom
+  const avatarColor = useMemo(() => {
+    const colors = [
+      '#6366F1', '#8B5CF6', '#EC4899', '#F43F5E',
+      '#0EA5E9', '#10B981', '#F59E0B', '#EF4444',
+      '#06B6D4', '#84CC16', '#F97316', '#EAB308'
+    ];
+    
+    const fullName = `${user.first_name}${user.last_name}`;
+    let hash = 0;
+    for (let i = 0; i < fullName.length; i++) {
+      hash = fullName.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return colors[Math.abs(hash) % colors.length];
+  }, [user.first_name, user.last_name]);
+
+  const getInitials = () => {
+    const firstInitial = user.first_name?.charAt(0)?.toUpperCase() || '';
+    const lastInitial = user.last_name?.charAt(0)?.toUpperCase() || '';
+    return `${firstInitial}${lastInitial}`;
+  };
+
+  const getSortIcon = () => {
+    if (!sortDirection) return 'swap-vertical-outline';
+    return sortDirection === 'asc' ? 'arrow-up' : 'arrow-down';
+  };
+
   return (
     <View style={styles.container}>
-      <View style={[styles.profilePic, { backgroundColor: generateColor(user.first_name) }]}>
-        {user.photo ? (
-          getAvatar()
-        ) : (
+      {/* Avatar amélioré */}
+      <View style={[styles.avatarContainer, { backgroundColor: avatarColor }]}>
+        {!user.photo ? (
           <Image 
-            source={require('../../assets/images/default-avatar.png')} 
-            style={styles.profilePic} 
+            source={{ uri: user.photo }} 
+            style={styles.avatarImage}
+            defaultSource={require('../../assets/images/default-avatar.png')}
           />
+        ) : (
+          <Text style={styles.avatarText}>{getInitials()}</Text>
         )}
+        <View style={styles.onlineDot} />
       </View>
 
-
-      <View style={[styles.searchBar, { backgroundColor: 'white' }]}>
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Search un etudiant.."
-          placeholderTextColor="#999"
-          value={value}
-          onChangeText={onChangeText}
-        />
-        <TouchableOpacity style={styles.searchButton}>
-          <Ionicons name="search" size={20} color="#F26407" />
-        </TouchableOpacity>
+      {/* Barre de recherche améliorée */}
+      <View style={styles.searchContainer}>
+        <View style={styles.searchBar}>
+          <Ionicons name="search" size={18} color="#64748B" style={styles.searchIcon} />
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Rechercher un étudiant..."
+            placeholderTextColor="#94A3B8"
+            value={value}
+            onChangeText={onChangeText}
+            returnKeyType="search"
+            clearButtonMode="while-editing"
+          />
+          {value.length > 0 && (
+            <TouchableOpacity 
+              onPress={() => onChangeText('')}
+              style={styles.clearButton}
+            >
+              <Ionicons name="close-circle" size={18} color="#94A3B8" />
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
 
-      <View style={styles.icons}>
-        <TouchableOpacity style={styles.iconButton} onPress={trie}>
-          <Ionicons name="swap-vertical" size={20} color="#F26407" />
+    
+      <View style={styles.actionsContainer}>
+        <TouchableOpacity 
+          style={[styles.actionButton, sortDirection && styles.activeActionButton]} 
+          onPress={sortData}
+          activeOpacity={0.7}
+        >
+          <Ionicons 
+            name={getSortIcon()} 
+            size={18} 
+            color={sortDirection ? "#6366F1" : "#64748B"} 
+          />
         </TouchableOpacity>
+        
+        <View style={styles.separator} />
+        
         <TouchableOpacity
-          style={styles.iconButton}
+          style={[styles.actionButton, grid && styles.activeActionButton]}
           onPress={() => setGrid(!grid)}
+          activeOpacity={0.7}
         >
           <Ionicons
-            name={!grid ? "grid" : "list"}
-            size={20}
-            color="#F26407"
+            name={grid ? "list" : "grid"}
+            size={18}
+            color={grid ? "#6366F1" : "#64748B"}
           />
         </TouchableOpacity>
       </View>
@@ -83,60 +144,105 @@ const Header = ({ grid, setGrid, value, onChangeText, data, setData, sortDirecti
 };
 
 const styles = StyleSheet.create({
-  avatarText: {
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 20,
-    textAlign: 'center',
-  },
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 10,
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    backgroundColor: 'white',
+    borderBottomWidth: 1,
+    borderBottomColor: '#F1F5F9',
 
   },
-  profilePic: {
-    width: 50,
-    height: 50,
-    borderRadius: 50,
-    overflow: 'hidden',
-    backgroundColor: '#f5f5f5',
-    borderWidth: 2,
-    borderColor: '#F26407',
+
+  avatarContainer: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
     justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+   
   },
-  profileImage: {
-    width: 50,
-    height: 50,
-    borderRadius: 20,
+  avatarImage: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+  },
+  avatarText: {
+    color: '#FFFFFF',
+    fontWeight: '700',
+    fontSize: 16,
+    letterSpacing: 0.5,
+  },
+  onlineDot: {
+    position: 'absolute',
+    right: 2,
+    bottom: 2,
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: '#22C55E',
+    borderWidth: 2,
+    borderColor: '#FFFFFF',
+  },
+
+
+  searchContainer: {
+    flex: 1,
+    marginHorizontal: 16,
   },
   searchBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginLeft: 10,
-    borderWidth: 2,
-    borderColor: '#F26407',
-    borderRadius: 20,
-    paddingHorizontal: 5,
-    paddingVertical: 5,
-    flex: 1,
+    backgroundColor: '#F8FAFC',
+    borderRadius: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+  },
+  searchIcon: {
+    marginRight: 12,
   },
   searchInput: {
     flex: 1,
-    paddingHorizontal: 5,
-    paddingVertical: 5,
     fontSize: 16,
+    color: '#1E293B',
+    fontWeight: '400',
   },
-  searchButton: {
-    paddingHorizontal: 8,
+  clearButton: {
+    marginLeft: 8,
+    padding: 4,
   },
-  icons: {
+
+  actionsContainer: {
     flexDirection: 'row',
-    marginLeft: 10,
+    // backgroundColor: '#F8FAFC',
+    // borderRadius: 14,
+    // padding: 4,
+    // borderWidth: 1,
+    // borderColor: '#E2E8F0',
   },
-  iconButton: {
-    marginLeft: 10,
-    padding: 5,
+  actionButton: {
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    borderRadius: 10,
+    minWidth: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  activeActionButton: {
+    backgroundColor: 'transpatents',
+    color:'gray'
+   
+  },
+  separator: {
+    width: 1,
+    height: 20,
+    backgroundColor: '#E2E8F0',
+    marginHorizontal: 4,
+    alignSelf: 'center',
   },
 });
 
