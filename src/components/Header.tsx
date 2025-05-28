@@ -1,11 +1,11 @@
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import {
-    Image,
-    StyleSheet,
-    TextInput,
-    TouchableOpacity,
-    View
+  Image,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View
 } from 'react-native';
 
 
@@ -26,13 +26,13 @@ const Header = ({ grid, setGrid }: any) => {
           placeholderTextColor="#999"
         />
         <TouchableOpacity style={styles.searchButton}>
-          <Ionicons name="search" size={20} color="#FFA909" />
+          <Ionicons name="search" size={20} color="#F26407" />
         </TouchableOpacity>
       </View>
       
       <View style={styles.icons}>
         <TouchableOpacity style={styles.iconButton}>
-          <Ionicons name="swap-vertical" size={20} color="#FFA909" />
+          <Ionicons name="swap-vertical" size={20} color="#F26407" />
         </TouchableOpacity>
         <TouchableOpacity 
           style={styles.iconButton}
@@ -41,7 +41,7 @@ const Header = ({ grid, setGrid }: any) => {
           <Ionicons 
             name={!grid ? "grid" : "list"} 
             size={20} 
-            color="#FFA909" 
+            color="#F26407" 
           />
         </TouchableOpacity>
       </View>
@@ -54,6 +54,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 10,
+   
   },
   profilePic: {
     width: 50,
@@ -62,7 +63,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     backgroundColor: '#f5f5f5',
     borderWidth: 2,
-    borderColor: '#FFA909',
+    borderColor: '#F26407',
   },
   profileImage: {
     width: 50,
@@ -74,7 +75,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginLeft: 10,
     borderWidth: 2,
-    borderColor: '#FFA909',    
+    borderColor: '#F26407',    
     borderRadius: 20,
     paddingHorizontal: 5,
     paddingVertical: 5,

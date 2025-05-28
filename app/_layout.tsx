@@ -6,7 +6,7 @@ import { ActivityIndicator, View } from "react-native";
 
 export default function RootLayout() {
   const setUserAndStudent = useUserStore(state => state.setUserAndStudent);
-  const user = useUserStore(state => state.user); // pour vérifier si déjà chargé
+  const user = useUserStore(state => state.user); 
   const [isLoading, setIsLoading] = useState(true);
   const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL;
 
@@ -54,20 +54,20 @@ export default function RootLayout() {
 
   return (
     <Stack>
-      {/* Écran d’accueil */}
+
       <Stack.Screen name="index" options={{ headerShown: false }} />
-      {/* Si connecté */}
+
       {user && (
         <Stack.Screen name="home" options={{ headerShown: false }} />
       )}
-      {/* Onglets */}
+
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
 
-      {/* Auth Screens */}
+
       <Stack.Screen name="auth/login" options={{ headerShown: false }} />
       <Stack.Screen name="auth/SignUp" options={{ headerShown: false }} />
 
-      {/* Onboarding */}
+   
       <Stack.Screen
         name="OnboardingScreen"
         options={{ headerShown: false, animation: "slide_from_right" }}
