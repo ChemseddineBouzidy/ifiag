@@ -35,8 +35,8 @@ const Header: React.FC<HeaderProps> = ({
 
   const sortData = () => {
     const sortedData = [...data].sort((a, b) => {
-      const nameA = `${a.user.first_name} ${a.user.last_name}`.toLowerCase();
-      const nameB = `${b.user.first_name} ${b.user.last_name}`.toLowerCase();
+      const nameA = `${a.user?.first_name} ${a.user?.last_name}`.toLowerCase();
+      const nameB = `${b.user?.first_name} ${b.user?.last_name}`.toLowerCase();
       return sortDirection === 'asc' ? nameA.localeCompare(nameB) : nameB.localeCompare(nameA);
     });
 
@@ -52,7 +52,7 @@ const Header: React.FC<HeaderProps> = ({
       '#06B6D4', '#84CC16', '#F97316', '#EAB308'
     ];
     
-    const fullName = `${user.first_name}${user.last_name}`;
+    const fullName = `${user?.first_name}${user?.last_name}`;
     let hash = 0;
     for (let i = 0; i < fullName.length; i++) {
       hash = fullName.charCodeAt(i) + ((hash << 5) - hash);
@@ -61,8 +61,8 @@ const Header: React.FC<HeaderProps> = ({
   }, [user.first_name, user.last_name]);
 
   const getInitials = () => {
-    const firstInitial = user.first_name?.charAt(0)?.toUpperCase() || '';
-    const lastInitial = user.last_name?.charAt(0)?.toUpperCase() || '';
+    const firstInitial = user?.first_name?.charAt(0)?.toUpperCase() || '';
+    const lastInitial = user?.last_name?.charAt(0)?.toUpperCase() || '';
     return `${firstInitial}${lastInitial}`;
   };
 
