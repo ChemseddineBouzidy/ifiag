@@ -1,50 +1,25 @@
-# Welcome to your Expo app 👋
+# 📱 IFIAG Mobile App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Une application mobile développée avec **React Native (Expo)** permettant aux utilisateurs d'interagir avec l'API [IFIAG](https://ifiag.pidefood.com/docs).  
+L'app utilise **Zustand** pour la gestion d'état, **Zod** pour la validation des formulaires, **AsyncStorage** pour la persistance locale, et `fetch` pour la communication avec l'API.
 
-## Get started
+---
 
-1. Install dependencies
+## ⚙️ Technologies utilisées
 
-   ```bash
-   npm install
-   ```
+- [Expo](https://expo.dev/)
+- [React Native](https://reactnative.dev/)
+- [Zustand](https://docs.pmnd.rs/zustand)
+- [Zod](https://zod.dev/)
+- [AsyncStorage](https://react-native-async-storage.github.io/async-storage/)
+- `fetch` (API REST)
+- [IFIAG API Docs](https://ifiag.pidefood.com/docs)
 
-2. Start the app
+---
 
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+## 📦 Installation
 
 ```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+git clone https://github.com/ton-username/ifiag-mobile-app.git
+cd ifiag-mobile-app
+npm install

@@ -83,7 +83,7 @@ export default function Login() {
             const data = await response.json();
             console.log('Login successful:', data.data.access_token);
             await AsyncStorage.setItem('access_token', data.data.access_token);
-            // router.replace('/home');
+            // router.replace('/home');A
             const profileResponse = await fetch(`${BASE_URL}/api/auth/profile`, {
                 headers: { Authorization: `Bearer ${data.data.access_token}` },
             });
