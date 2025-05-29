@@ -55,6 +55,24 @@ export default function RootLayout() {
             ),
           }}
         />
+          <Tabs.Screen
+            name="UpdateProfile"
+            options={{
+              title: "Profile",
+              tabBarIcon: ({ color, size, focused }) => (
+                <View style={{
+                  backgroundColor: focused ? 'rgba(99, 102, 241, 0.1)' : 'transparent',
+                  borderRadius: 12,
+                }}>
+                  <Ionicons 
+                    name={focused ? "person" : "person-outline"} 
+                    size={size} 
+                    color={color} 
+                  />
+                </View>
+              ),
+            }}
+          />
       </Tabs>
     </>
   );
