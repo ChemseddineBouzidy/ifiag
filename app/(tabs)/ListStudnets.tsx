@@ -22,7 +22,7 @@ const { width } = Dimensions.get('window');
 
 const ListStudents = () => {
   const BASE_URL = process.env.EXPO_PUBLIC_BASE_URL;
-  const [grid, setGrid] = useState<any>(true);
+  const [grid, setGrid] = useState<any>(false);
   const [students, setStudents] = useState<any[]>([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);

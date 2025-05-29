@@ -44,7 +44,7 @@ export default function RootLayout() {
   }, []);
 
   if (isLoading) {
-    // Montre un écran de chargement ou rien
+
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <ActivityIndicator size="large" color="#000" />
