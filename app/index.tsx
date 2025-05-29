@@ -70,7 +70,7 @@ const SplashScreen = () => {
   }, []);
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "black" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#1E2C46" }}>
       <View
         style={{
           flex: 1,

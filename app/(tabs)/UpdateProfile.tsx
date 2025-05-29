@@ -505,7 +505,7 @@ console.log('formData.photo'+formData.photo)
   );
 };
 
-const styles = StyleSheet.create({
+ const styles = StyleSheet.create({
     container: {
       flex: 1,
       backgroundColor: '#F8FAFC',
@@ -537,8 +537,6 @@ const styles = StyleSheet.create({
       paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 84,
       paddingHorizontal: 24,
       paddingBottom: 32,
-      // borderBottomLeftRadius: 24,
-      // borderBottomRightRadius: 24,
     },
     headerContent: {
       marginBottom: 8,
@@ -557,7 +555,7 @@ const styles = StyleSheet.create({
       flex: 1,
     },
     scrollContent: {
-      padding: 20,
+      // padding: 20,
       paddingBottom: 100,
     },
     formCard: {

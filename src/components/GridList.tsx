@@ -90,7 +90,7 @@ const getAvatar = () =>{
   );
 };
 
-const styles = StyleSheet.create({
+ const styles = StyleSheet.create({
   card: {
     width: 180,
     padding: 20,

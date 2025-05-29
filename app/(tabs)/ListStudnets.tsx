@@ -465,10 +465,11 @@ const ListStudents = () => {
 
 export default ListStudents;
 
-const styles = StyleSheet.create({
+ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white', 
+    marginTop:33
   },
   listContainer: {
     paddingHorizontal: 16,
@@ -491,7 +492,7 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 4,
     borderWidth: 1,
-    borderColor: '#e5e7eb',
+    borderColor: '#e2e8f0',
   },
   cardContent: {
     flexDirection: 'row',
@@ -507,7 +508,7 @@ const styles = StyleSheet.create({
     borderRadius: 28,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#3b82f6',
+    backgroundColor: '#4f46e5',
   },
   avatarText: {
     color: '#ffffff',
@@ -521,7 +522,7 @@ const styles = StyleSheet.create({
     width: 14,
     height: 14,
     borderRadius: 7,
-    backgroundColor: '#10b981',
+    backgroundColor: '#22c55e',
     borderWidth: 2,
     borderColor: '#ffffff',
   },
@@ -532,7 +533,7 @@ const styles = StyleSheet.create({
   studentName: {
     fontSize: 17,
     fontWeight: '600',
-    color: '#1f2937',
+    color: '#0f172a',
     marginBottom: 4,
   },
   badgeContainer: {
@@ -543,7 +544,7 @@ const styles = StyleSheet.create({
   },
   badge: {
     fontSize: 12,
-    color: '#0ea5e9',
+    color: '#0284c7',
     backgroundColor: '#e0f2fe',
     paddingHorizontal: 10,
     paddingVertical: 4,
@@ -551,23 +552,23 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   fieldBadge: {
-    color: '#059669',
+    color: '#047857',
     backgroundColor: '#d1fae5',
   },
   classBadge: {
-    color: '#7c3aed',
+    color: '#6d28d9',
     backgroundColor: '#ede9fe',
   },
   studentEmail: {
     fontSize: 13,
-    color: '#6b7280',
+    color: '#475569',
   },
   actionSection: {
     marginLeft: 8,
     justifyContent: 'center',
   },
   actionButton: {
-    backgroundColor: '#2563eb',
+    backgroundColor: '#4f46e5',
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 12,
@@ -591,11 +592,11 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 10,
     borderLeftWidth: 4,
-    borderLeftColor: '#dc2626',
+    borderLeftColor: '#ef4444',
   },
   errorText: {
     flex: 1,
-    color: '#b91c1c',
+    color: '#dc2626',
     fontSize: 14,
     fontWeight: '500',
     marginLeft: 8,
@@ -610,11 +611,11 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 999,
     borderWidth: 1,
-    borderColor: '#e5e7eb',
+    borderColor: '#e2e8f0',
   },
   loadingText: {
     fontSize: 14,
-    color: '#6b7280',
+    color: '#475569',
     fontWeight: '500',
   },
   emptyState: {
@@ -626,25 +627,25 @@ const styles = StyleSheet.create({
     width: 70,
     height: 70,
     borderRadius: 35,
-    backgroundColor: '#e5e7eb',
+    backgroundColor: '#e2e8f0',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 16,
   },
   emptyIconText: {
     fontSize: 34,
-    color: '#9ca3af',
+    color: '#94a3b8',
   },
   emptyTitle: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#1f2937',
+    color: '#0f172a',
     marginBottom: 6,
     textAlign: 'center',
   },
   emptySubtitle: {
     fontSize: 14,
-    color: '#6b7280',
+    color: '#475569',
     textAlign: 'center',
     lineHeight: 20,
   },
@@ -666,12 +667,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
     borderBottomWidth: 1,
-    borderBottomColor: '#e5e7eb',
+    borderBottomColor: '#e2e8f0',
   },
   modalTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#1f2937',
+    color: '#0f172a',
   },
   filterContent: {
     flex: 1,
@@ -683,25 +684,25 @@ const styles = StyleSheet.create({
   filterLabel: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#1f2937',
+    color: '#0f172a',
     marginBottom: 12,
   },
   filterOptions: {
     flexDirection: 'row',
   },
   filterOption: {
-    backgroundColor: '#f3f4f6',
+    backgroundColor: '#f1f5f9',
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
     marginRight: 8,
   },
   filterOptionActive: {
-    backgroundColor: '#2563eb',
+    backgroundColor: '#4f46e5',
   },
   filterOptionText: {
     fontSize: 14,
-    color: '#6b7280',
+    color: '#475569',
     fontWeight: '500',
   },
   filterOptionTextActive: {
@@ -711,12 +712,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: 20,
     borderTopWidth: 1,
-    borderTopColor: '#e5e7eb',
+    borderTopColor: '#e2e8f0',
     gap: 12,
   },
   clearButton: {
     flex: 1,
-    backgroundColor: '#f3f4f6',
+    backgroundColor: '#f1f5f9',
     paddingVertical: 12,
     borderRadius: 12,
     alignItems: 'center',
@@ -724,11 +725,11 @@ const styles = StyleSheet.create({
   clearButtonText: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#6b7280',
+    color: '#475569',
   },
   applyButton: {
     flex: 1,
-    backgroundColor: '#2563eb',
+    backgroundColor: '#4f46e5',
     paddingVertical: 12,
     borderRadius: 12,
     alignItems: 'center',
