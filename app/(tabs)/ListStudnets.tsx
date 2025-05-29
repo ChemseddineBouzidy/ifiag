@@ -104,40 +104,37 @@ const ListStudents = () => {
     }
   };
 
-  const extractFilterOptions = ({studentsList}:any) => {
-    const fields = new Set();
-    const classes = new Set();
-    const statuses = new Set();
-
+  const extractFilterOptions = ({ studentsList }: any) => {
+    const fields: string[] = [];
+    const classes: string[] = [];
+    const statuses: string[] = [];
+  
     for (const student of studentsList) {
-
       const fieldValue = student.field?.name || student.field;
-      if (fieldValue) {
-        fields.add(fieldValue);
+      if (fieldValue && !fields.includes(fieldValue)) {
+        fields.push(fieldValue);
       }
-      
   
       const classValue = student.class?.name || student.class;
-      if (classValue) {
-        classes.add(classValue);
+      if (classValue && !classes.includes(classValue)) {
+        classes.push(classValue);
       }
-      
- 
+  
       const statusValue = student.status?.name || student.status;
-      if (statusValue) {
-        statuses.add(statusValue);
+      if (statusValue && !statuses.includes(statusValue)) {
+        statuses.push(statusValue);
       }
     }
-
-    console.log('Extracted Fields:', Array.from(fields));
-    console.log('Extracted Classes:', Array.from(classes));
-    console.log('Extracted Statuses:', Array.from(statuses));
-    
-    setAvailableFields(Array.from(fields));
-    setAvailableClasses(Array.from(classes));
-    setAvailableStatuses(Array.from(statuses));
+  
+    console.log('Extracted Fields:', fields);
+    console.log('Extracted Classes:', classes);
+    console.log('Extracted Statuses:', statuses);
+  
+    setAvailableFields(fields);
+    setAvailableClasses(classes);
+    setAvailableStatuses(statuses);
   };
-
+  
   const onRefresh = () => {
     setRefreshing(true);
     list(true);

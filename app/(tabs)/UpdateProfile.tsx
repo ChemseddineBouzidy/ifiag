@@ -1,19 +1,20 @@
+import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
 import React, { useEffect, useState } from 'react';
 import {
-    ActivityIndicator,
-    Alert,
-    Dimensions,
-    Image,
-    Platform,
-    ScrollView,
-    StatusBar,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View
+  ActivityIndicator,
+  Alert,
+  Dimensions,
+  Image,
+  Platform,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View
 } from 'react-native';
 import { z } from 'zod';
 
@@ -294,7 +295,7 @@ const UpdateProfileForm = () => {
       </View>
     );
   }
-
+console.log('formData.photo'+formData.photo)
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#FF6B35" />
@@ -325,13 +326,14 @@ const UpdateProfileForm = () => {
                     style={styles.profileImage} 
                   />
                   <View style={styles.photoOverlay}>
+                    <Ionicons name="camera" size={16} color="#FFFFFF" />
                     <Text style={styles.photoOverlayText}>Change</Text>
                   </View>
                 </View>
               ) : (
                 <View style={styles.photoPlaceholder}>
                   <View style={styles.photoIcon}>
-                    <Text style={styles.photoIconText}>📷</Text>
+                    <Ionicons name="camera-outline" size={32} color="#FF6B35" />
                   </View>
                   <Text style={styles.photoText}>Add Photo</Text>
                   <Text style={styles.photoSubtext}>JPG or PNG, max 5MB</Text>
@@ -532,11 +534,11 @@ const styles = StyleSheet.create({
     },
     header: {
       backgroundColor: '#FF6B35',
-      paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 44,
+      paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 84,
       paddingHorizontal: 24,
       paddingBottom: 32,
-      borderBottomLeftRadius: 24,
-      borderBottomRightRadius: 24,
+      // borderBottomLeftRadius: 24,
+      // borderBottomRightRadius: 24,
     },
     headerContent: {
       marginBottom: 8,
@@ -559,7 +561,6 @@ const styles = StyleSheet.create({
       paddingBottom: 100,
     },
     formCard: {
-      backgroundColor: '#FFFFFF',
       borderRadius: 20,
       padding: 20,
       shadowColor: '#000',
@@ -583,14 +584,14 @@ const styles = StyleSheet.create({
 
     },
     input: {
-      backgroundColor: '#F1F5F9',
+      backgroundColor: 'white',
       borderRadius: 10,
       paddingVertical: 12,
       paddingHorizontal: 16,
       fontSize: 16,
       color: '#111827',
       borderWidth: 1,
-      borderColor: '#E5E7EB',
+      borderColor: '#F26407',
     },
     inputError: {
       borderColor: '#EF4444',

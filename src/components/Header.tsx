@@ -67,9 +67,9 @@ const Header = ({
 
       <TouchableOpacity onPress={() => router.push('/(tabs)/UpdateProfile')}>
         <View style={[styles.avatarContainer, { backgroundColor: avatarColor }]}>
-          {user?.photo ? (
+          {!user?.photo ? (
             <Image 
-              source={{ uri: user.photo }} 
+              source={{ uri: user?.photo }} 
               style={styles.avatarImage}
               defaultSource={require('../../assets/images/default-avatar.png')}
             />
@@ -186,12 +186,15 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   avatarText: {
     color: '#FFFFFF',
     fontWeight: '700',
     fontSize: 16,
     letterSpacing: 0.5,
+    textAlign: 'center',
   },
   onlineDot: {
     position: 'absolute',
