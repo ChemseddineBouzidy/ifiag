@@ -236,7 +236,7 @@ export default ListStudents;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8fafc', 
+    backgroundColor: 'white', 
   },
   listContainer: {
     paddingHorizontal: 16,
