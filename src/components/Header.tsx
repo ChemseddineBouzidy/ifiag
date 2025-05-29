@@ -1,5 +1,6 @@
 import { useUserStore } from '@/store/userStore';
 import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
 import React, { useMemo } from 'react';
 import {
   Image,
@@ -10,18 +11,7 @@ import {
   View
 } from 'react-native';
 
-interface HeaderProps {
-  grid: boolean;
-  setGrid: (value: boolean) => void;
-  value: string;
-  onChangeText: (text: string) => void;
-  data: any[];
-  setData: (data: any[]) => void;
-  sortDirection: 'asc' | 'desc' | null;
-  setSortDirection: (direction: 'asc' | 'desc' | null) => void;
-}
-
-const Header: React.FC<HeaderProps> = ({ 
+const Header = ({
   grid, 
   setGrid, 
   value, 
@@ -29,14 +19,16 @@ const Header: React.FC<HeaderProps> = ({
   data, 
   setData, 
   sortDirection, 
-  setSortDirection 
-}) => {
+  setSortDirection,
+  onFilterPress, 
+  activeFiltersCount = 0 
+}: any) => {
   const user = useUserStore(state => state.user);
 
   const sortData = () => {
     const sortedData = [...data].sort((a, b) => {
-      const nameA = `${a.user?.first_name} ${a.user?.last_name}`.toLowerCase();
-      const nameB = `${b.user?.first_name} ${b.user?.last_name}`.toLowerCase();
+      const nameA = `${a.user?.first_name || ''} ${a.user?.last_name || ''}`.toLowerCase().trim();
+      const nameB = `${b.user?.first_name || ''} ${b.user?.last_name || ''}`.toLowerCase().trim();
       return sortDirection === 'asc' ? nameA.localeCompare(nameB) : nameB.localeCompare(nameA);
     });
 
@@ -44,7 +36,6 @@ const Header: React.FC<HeaderProps> = ({
     setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
   };
 
-  // Génération d'une couleur consistante basée sur le nom
   const avatarColor = useMemo(() => {
     const colors = [
       '#6366F1', '#8B5CF6', '#EC4899', '#F43F5E',
@@ -52,13 +43,13 @@ const Header: React.FC<HeaderProps> = ({
       '#06B6D4', '#84CC16', '#F97316', '#EAB308'
     ];
     
-    const fullName = `${user?.first_name}${user?.last_name}`;
+    const fullName = `${user?.first_name || ''}${user?.last_name || ''}`;
     let hash = 0;
     for (let i = 0; i < fullName.length; i++) {
       hash = fullName.charCodeAt(i) + ((hash << 5) - hash);
     }
     return colors[Math.abs(hash) % colors.length];
-  }, [user.first_name, user.last_name]);
+  }, [user?.first_name, user?.last_name]);
 
   const getInitials = () => {
     const firstInitial = user?.first_name?.charAt(0)?.toUpperCase() || '';
@@ -73,21 +64,23 @@ const Header: React.FC<HeaderProps> = ({
 
   return (
     <View style={styles.container}>
-      {/* Avatar amélioré */}
-      <View style={[styles.avatarContainer, { backgroundColor: avatarColor }]}>
-        {!user.photo ? (
-          <Image 
-            source={{ uri: user.photo }} 
-            style={styles.avatarImage}
-            defaultSource={require('../../assets/images/default-avatar.png')}
-          />
-        ) : (
-          <Text style={styles.avatarText}>{getInitials()}</Text>
-        )}
-        <View style={styles.onlineDot} />
-      </View>
 
-      {/* Barre de recherche améliorée */}
+      <TouchableOpacity onPress={() => router.push('/(tabs)/UpdateProfile')}>
+        <View style={[styles.avatarContainer, { backgroundColor: avatarColor }]}>
+          {user?.photo ? (
+            <Image 
+              source={{ uri: user.photo }} 
+              style={styles.avatarImage}
+              defaultSource={require('../../assets/images/default-avatar.png')}
+            />
+          ) : (
+            <Text style={styles.avatarText}>{getInitials()}</Text>
+          )}
+          <View style={styles.onlineDot} />
+        </View>
+      </TouchableOpacity>
+
+
       <View style={styles.searchContainer}>
         <View style={styles.searchBar}>
           <Ionicons name="search" size={18} color="#64748B" style={styles.searchIcon} />
@@ -111,8 +104,35 @@ const Header: React.FC<HeaderProps> = ({
         </View>
       </View>
 
-    
+
       <View style={styles.actionsContainer}>
+
+        {onFilterPress && (
+          <>
+            <TouchableOpacity 
+              style={[
+                styles.actionButton, 
+                activeFiltersCount > 0 && styles.activeActionButton
+              ]} 
+              onPress={onFilterPress}
+              activeOpacity={0.7}
+            >
+              <Ionicons 
+                name="filter" 
+                size={18} 
+                color={activeFiltersCount > 0 ? "#6366F1" : "#64748B"} 
+              />
+              {activeFiltersCount > 0 && (
+                <View style={styles.filterBadge}>
+                  <Text style={styles.filterBadgeText}>{activeFiltersCount}</Text>
+                </View>
+              )}
+            </TouchableOpacity>
+            <View style={styles.separator} />
+          </>
+        )}
+
+
         <TouchableOpacity 
           style={[styles.actionButton, sortDirection && styles.activeActionButton]} 
           onPress={sortData}
@@ -127,6 +147,7 @@ const Header: React.FC<HeaderProps> = ({
         
         <View style={styles.separator} />
         
+    
         <TouchableOpacity
           style={[styles.actionButton, grid && styles.activeActionButton]}
           onPress={() => setGrid(!grid)}
@@ -152,9 +173,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderBottomWidth: 1,
     borderBottomColor: '#F1F5F9',
-
   },
-
   avatarContainer: {
     width: 48,
     height: 48,
@@ -162,7 +181,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     position: 'relative',
-   
   },
   avatarImage: {
     width: 48,
@@ -186,8 +204,6 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: '#FFFFFF',
   },
-
-
   searchContainer: {
     flex: 1,
     marginHorizontal: 16,
@@ -215,14 +231,9 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     padding: 4,
   },
-
   actionsContainer: {
     flexDirection: 'row',
-    // backgroundColor: '#F8FAFC',
-    // borderRadius: 14,
-    // padding: 4,
-    // borderWidth: 1,
-    // borderColor: '#E2E8F0',
+    alignItems: 'center',
   },
   actionButton: {
     paddingHorizontal: 12,
@@ -231,11 +242,10 @@ const styles = StyleSheet.create({
     minWidth: 40,
     alignItems: 'center',
     justifyContent: 'center',
+    position: 'relative',
   },
   activeActionButton: {
-    backgroundColor: 'transpatents',
-    color:'gray'
-   
+    backgroundColor: '#EEF2FF',
   },
   separator: {
     width: 1,
@@ -243,6 +253,22 @@ const styles = StyleSheet.create({
     backgroundColor: '#E2E8F0',
     marginHorizontal: 4,
     alignSelf: 'center',
+  },
+  filterBadge: {
+    position: 'absolute',
+    top: 2,
+    right: 2,
+    backgroundColor: '#DC2626',
+    borderRadius: 8,
+    width: 16,
+    height: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  filterBadgeText: {
+    color: '#FFFFFF',
+    fontSize: 10,
+    fontWeight: '600',
   },
 });
 

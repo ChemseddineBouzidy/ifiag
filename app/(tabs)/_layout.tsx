@@ -8,7 +8,7 @@ export default function RootLayout() {
   return (
     <>
       <StatusBar
-        barStyle="dark-content" 
+        barStyle="light-content" 
         backgroundColor="white"
       />
 

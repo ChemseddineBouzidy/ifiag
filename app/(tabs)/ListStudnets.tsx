@@ -5,8 +5,10 @@ import React, { useEffect, useState } from 'react';
 import {
   Dimensions,
   FlatList,
+  Modal,
   RefreshControl,
   SafeAreaView,
+  ScrollView,
   StatusBar,
   StyleSheet,
   Text,
@@ -31,6 +33,14 @@ const ListStudents = () => {
   const [search, setSearch] = useState('');
   const [filteredStudents, setFilteredStudents] = useState<any[]>([]);
   const [sortDirection, setSortDirection] = useState('asc');
+
+  const [showFilters, setShowFilters] = useState(false);
+  const [selectedField, setSelectedField] = useState('');
+  const [selectedClass, setSelectedClass] = useState('');
+  const [selectedStatus, setSelectedStatus] = useState('');
+  const [availableFields, setAvailableFields] = useState<any[]>([]);
+  const [availableClasses, setAvailableClasses] = useState<any[]>([]);
+  const [availableStatuses, setAvailableStatuses] = useState<any[]>([]);
 
   const list = async (isRefresh = false) => {
     if (loading || (!hasMore && !isRefresh)) return;
@@ -65,18 +75,24 @@ const ListStudents = () => {
       const data = await response.json();
       const newStudents = data.data.data;
       
+      let updatedStudents;
       if (isRefresh) {
+        updatedStudents = newStudents;
         setStudents(newStudents);
         setPage(2);
         setHasMore(!!data.data.next_page_url);
       } else {
-        setStudents((prev) => [...prev, ...newStudents]);
+        updatedStudents = [...students, ...newStudents];
+        setStudents(updatedStudents);
         setPage((prev) => prev + 1);
         
         if (!data.data.next_page_url) {
           setHasMore(false);
         }
       }
+      
+  
+      extractFilterOptions(updatedStudents);
       
       setErrors(null);
     } catch (error) {
@@ -86,6 +102,40 @@ const ListStudents = () => {
       setLoading(false);
       setRefreshing(false);
     }
+  };
+
+  const extractFilterOptions = ({studentsList}:any) => {
+    const fields = new Set();
+    const classes = new Set();
+    const statuses = new Set();
+
+    for (const student of studentsList) {
+
+      const fieldValue = student.field?.name || student.field;
+      if (fieldValue) {
+        fields.add(fieldValue);
+      }
+      
+  
+      const classValue = student.class?.name || student.class;
+      if (classValue) {
+        classes.add(classValue);
+      }
+      
+ 
+      const statusValue = student.status?.name || student.status;
+      if (statusValue) {
+        statuses.add(statusValue);
+      }
+    }
+
+    console.log('Extracted Fields:', Array.from(fields));
+    console.log('Extracted Classes:', Array.from(classes));
+    console.log('Extracted Statuses:', Array.from(statuses));
+    
+    setAvailableFields(Array.from(fields));
+    setAvailableClasses(Array.from(classes));
+    setAvailableStatuses(Array.from(statuses));
   };
 
   const onRefresh = () => {
@@ -103,32 +153,205 @@ const ListStudents = () => {
   }, [query]);
   
   useEffect(() => {
-    if (search.trim() === '') {
-      setFilteredStudents(students); 
-      return;
-    }
-  
-    const filtered = students.filter((student) =>
-      `${student.user.first_name} ${student.user.last_name}`.toLowerCase().includes(search.toLowerCase())
-    );
-  
-    setFilteredStudents(filtered);
-  }, [search, students]);
+    let filtered = [...students]; 
 
-  const getInitials = (firstName, lastName) => {
+    console.log('=== FILTER DEBUG ===');
+    console.log('Total students:', students.length);
+    console.log('Search term:', search);
+    console.log('Selected field:', selectedField);
+    console.log('Selected class:', selectedClass);
+    console.log('Selected status:', selectedStatus);
+
+
+    if (search.trim() !== '') {
+      filtered = filtered.filter((student) => {
+        const fullName = `${student.user?.first_name || ''} ${student.user?.last_name || ''}`.toLowerCase();
+        const email = (student.user?.email || '').toLowerCase();
+        const searchTerm = search.toLowerCase();
+        
+        return fullName.includes(searchTerm) || email.includes(searchTerm);
+      });
+      console.log('After search filter:', filtered.length);
+    }
+
+    // Apply field filter - Fixed to handle both object and string formats
+    if (selectedField) {
+      filtered = filtered.filter((student) => {
+        const studentField =  student.field;
+        console.log(`Student field: "${studentField}" vs Selected: "${selectedField}"`);
+        return studentField === selectedField;
+      });
+      console.log('After field filter:', filtered.length);
+    }
+
+
+    if (selectedClass) {
+      filtered = filtered.filter((student) => {
+        const studentClass =  student.class;
+        console.log(`Student class: "${studentClass}" vs Selected: "${selectedClass}"`);
+        return studentClass === selectedClass;
+      });
+      console.log('After class filter:', filtered.length);
+    }
+
+ 
+    if (selectedStatus) {
+      filtered = filtered.filter((student) => {
+        const statusValue =  student.status;
+        console.log(`Student status: "${statusValue}" vs Selected: "${selectedStatus}"`);
+        return statusValue === selectedStatus;
+      });
+      console.log('After status filter:', filtered.length);
+    }
+
+    console.log('Final filtered count:', filtered.length);
+    console.log('===================');
+
+    setFilteredStudents(filtered);
+  }, [search, students, selectedField, selectedClass, selectedStatus]);
+
+  const getInitials = ({firstName, lastName}:any) => {
     return `${firstName?.[0] || ''}${lastName?.[0] || ''}`.toUpperCase();
   };
 
-  const getAvatarColor = (name) => {
+  const getAvatarColor = ({name}:any) => {
     const colors = ['#2563eb', '#7c3aed', '#dc2626', '#059669', '#ea580c', '#0891b2'];
     const index = name.length % colors.length;
     return colors[index];
   };
 
+  const clearFilters = () => {
+    setSelectedField('');
+    setSelectedClass('');
+    setSelectedStatus('');
+    setShowFilters(false);
+  };
+
+  const getActiveFiltersCount = () => {
+    let count = 0;
+    if (selectedField) count++;
+    if (selectedClass) count++;
+    if (selectedStatus) count++;
+    return count;
+  };
+
+  const renderFilterModal = () => (
+    <Modal
+      visible={showFilters}
+      transparent={true}
+      animationType="slide"
+      onRequestClose={() => setShowFilters(false)}
+    >
+      <View style={styles.modalOverlay}>
+        <View style={styles.modalContent}>
+          <View style={styles.modalHeader}>
+            <Text style={styles.modalTitle}>Filtres</Text>
+            <TouchableOpacity onPress={() => setShowFilters(false)}>
+              <Ionicons name="close" size={24} color="#6b7280" />
+            </TouchableOpacity>
+          </View>
+
+          <ScrollView style={styles.filterContent}>
+            {/* Field Filter */}
+            <View style={styles.filterSection}>
+              <Text style={styles.filterLabel}>Domaine d'étude</Text>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterOptions}>
+                <TouchableOpacity
+                  style={[styles.filterOption, !selectedField && styles.filterOptionActive]}
+                  onPress={() => setSelectedField('')}
+                >
+                  <Text style={[styles.filterOptionText, !selectedField && styles.filterOptionTextActive]}>
+                    Tous
+                  </Text>
+                </TouchableOpacity>
+                {availableFields.map((field, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    style={[styles.filterOption, selectedField === field && styles.filterOptionActive]}
+                    onPress={() => setSelectedField(field)}
+                  >
+                    <Text style={[styles.filterOptionText, selectedField === field && styles.filterOptionTextActive]}>
+                      {field}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            </View>
+
+            {/* Class Filter */}
+            <View style={styles.filterSection}>
+              <Text style={styles.filterLabel}>Classe</Text>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterOptions}>
+                <TouchableOpacity
+                  style={[styles.filterOption, !selectedClass && styles.filterOptionActive]}
+                  onPress={() => setSelectedClass('')}
+                >
+                  <Text style={[styles.filterOptionText, !selectedClass && styles.filterOptionTextActive]}>
+                    Toutes
+                  </Text>
+                </TouchableOpacity>
+                {availableClasses.map((className, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    style={[styles.filterOption, selectedClass === className && styles.filterOptionActive]}
+                    onPress={() => setSelectedClass(className)}
+                  >
+                    <Text style={[styles.filterOptionText, selectedClass === className && styles.filterOptionTextActive]}>
+                      {className}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            </View>
+
+            {/* Status Filter */}
+            <View style={styles.filterSection}>
+              <Text style={styles.filterLabel}>Statut</Text>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterOptions}>
+                <TouchableOpacity
+                  style={[styles.filterOption, !selectedStatus && styles.filterOptionActive]}
+                  onPress={() => setSelectedStatus('')}
+                >
+                  <Text style={[styles.filterOptionText, !selectedStatus && styles.filterOptionTextActive]}>
+                    Tous
+                  </Text>
+                </TouchableOpacity>
+                {availableStatuses.map((status, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    style={[styles.filterOption, selectedStatus === status && styles.filterOptionActive]}
+                    onPress={() => setSelectedStatus(status)}
+                  >
+                    <Text style={[styles.filterOptionText, selectedStatus === status && styles.filterOptionTextActive]}>
+                      {status}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            </View>
+          </ScrollView>
+
+          <View style={styles.modalFooter}>
+            <TouchableOpacity style={styles.clearButton} onPress={clearFilters}>
+              <Text style={styles.clearButtonText}>Effacer tout</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.applyButton} onPress={() => setShowFilters(false)}>
+              <Text style={styles.applyButtonText}>Appliquer</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    </Modal>
+  );
+
   const renderListItem = ({ item, index }) => {
-    const fullName = `${item.user.first_name || ''} ${item.user.last_name || ''}`.trim();
-    const initials = getInitials(item.user.first_name, item.user.last_name);
+    const fullName = `${item.user?.first_name || ''} ${item.user?.last_name || ''}`.trim();
+    const initials = getInitials(item.user?.first_name, item.user?.last_name);
     const avatarColor = getAvatarColor(fullName);
+
+    // Fixed to handle both object and string formats for display
+    const fieldName = item.field?.name || item.field;
+    const className = item.class?.name || item.class;
 
     return (
       <TouchableOpacity style={styles.studentCard} activeOpacity={0.7}>
@@ -144,12 +367,18 @@ const ListStudents = () => {
             <Text style={styles.studentName}>{fullName}</Text>
             <View style={styles.badgeContainer}>
               <Text style={styles.badge}>Étudiant</Text>
+              {fieldName && (
+                <Text style={[styles.badge, styles.fieldBadge]}>{fieldName}</Text>
+              )}
+              {className && (
+                <Text style={[styles.badge, styles.classBadge]}>{className}</Text>
+              )}
             </View>
-            <Text style={styles.studentEmail}>{item.user.email}</Text>
+            <Text style={styles.studentEmail}>{item.user?.email}</Text>
           </View>
           
           <View style={styles.actionSection}>
-            <TouchableOpacity style={styles.actionButton}   onPress={() => router.push(`/Student/${item.user.id}`)}>
+            <TouchableOpacity style={styles.actionButton} onPress={() => router.push(`/Student/${item.user?.id}`)}>
               <Text style={styles.actionButtonText}>Voir</Text>
             </TouchableOpacity>
           </View>
@@ -165,11 +394,13 @@ const ListStudents = () => {
       </View>
       <Text style={styles.emptyTitle}>Aucun étudiant trouvé</Text>
       <Text style={styles.emptySubtitle}>
-        {search ? 'Modifiez vos critères de recherche' : 'Les étudiants apparaîtront ici une fois ajoutés'}
+        {search || getActiveFiltersCount() > 0 
+          ? 'Modifiez vos critères de recherche ou filtres' 
+          : 'Les étudiants apparaîtront ici une fois ajoutés'}
       </Text>
     </View>
   );
-  
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
@@ -183,6 +414,8 @@ const ListStudents = () => {
         setData={setFilteredStudents}
         sortDirection={sortDirection}
         setSortDirection={setSortDirection}
+        onFilterPress={() => setShowFilters(true)}
+        activeFiltersCount={getActiveFiltersCount()}
       />
 
       {errors && (
@@ -227,6 +460,8 @@ const ListStudents = () => {
         }
         ItemSeparatorComponent={() => <View style={styles.separator} />}
       />
+
+      {renderFilterModal()}
     </SafeAreaView>
   );
 };
@@ -275,7 +510,7 @@ const styles = StyleSheet.create({
     borderRadius: 28,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#3b82f6', // bleu primaire
+    backgroundColor: '#3b82f6',
   },
   avatarText: {
     color: '#ffffff',
@@ -304,7 +539,10 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   badgeContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     marginBottom: 4,
+    gap: 4,
   },
   badge: {
     fontSize: 12,
@@ -314,7 +552,14 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     borderRadius: 999,
     fontWeight: '500',
-    alignSelf: 'flex-start',
+  },
+  fieldBadge: {
+    color: '#059669',
+    backgroundColor: '#d1fae5',
+  },
+  classBadge: {
+    color: '#7c3aed',
+    backgroundColor: '#ede9fe',
   },
   studentEmail: {
     fontSize: 13,
@@ -405,5 +650,95 @@ const styles = StyleSheet.create({
     color: '#6b7280',
     textAlign: 'center',
     lineHeight: 20,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'flex-end',
+  },
+  modalContent: {
+    backgroundColor: '#ffffff',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    maxHeight: '90%',
+    height: 600
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e5e7eb',
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#1f2937',
+  },
+  filterContent: {
+    flex: 1,
+    padding: 20,
+  },
+  filterSection: {
+    marginBottom: 24,
+  },
+  filterLabel: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#1f2937',
+    marginBottom: 12,
+  },
+  filterOptions: {
+    flexDirection: 'row',
+  },
+  filterOption: {
+    backgroundColor: '#f3f4f6',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    marginRight: 8,
+  },
+  filterOptionActive: {
+    backgroundColor: '#2563eb',
+  },
+  filterOptionText: {
+    fontSize: 14,
+    color: '#6b7280',
+    fontWeight: '500',
+  },
+  filterOptionTextActive: {
+    color: '#ffffff',
+  },
+  modalFooter: {
+    flexDirection: 'row',
+    padding: 20,
+    borderTopWidth: 1,
+    borderTopColor: '#e5e7eb',
+    gap: 12,
+  },
+  clearButton: {
+    flex: 1,
+    backgroundColor: '#f3f4f6',
+    paddingVertical: 12,
+    borderRadius: 12,
+    alignItems: 'center',
+  },
+  clearButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#6b7280',
+  },
+  applyButton: {
+    flex: 1,
+    backgroundColor: '#2563eb',
+    paddingVertical: 12,
+    borderRadius: 12,
+    alignItems: 'center',
+  },
+  applyButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#ffffff',
   },
 });
