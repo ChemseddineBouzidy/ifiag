@@ -674,7 +674,7 @@ height: 2,
 marginHorizontal: 5,
 },
 stepContainer: {
-padding: 20,
+// padding: 20,
 },
 stepTitle: {
 fontSize: 22,
