@@ -104,23 +104,23 @@ const ListStudents = () => {
     }
   };
 
-  const extractFilterOptions = ({ studentsList }: any) => {
+  const extractFilterOptions = (studentsList ) => {
     const fields: string[] = [];
     const classes: string[] = [];
     const statuses: string[] = [];
   
     for (const student of studentsList) {
-      const fieldValue = student.field?.name || student.field;
+      const fieldValue = student.field;
       if (fieldValue && !fields.includes(fieldValue)) {
         fields.push(fieldValue);
       }
   
-      const classValue = student.class?.name || student.class;
+      const classValue =  student.class;
       if (classValue && !classes.includes(classValue)) {
         classes.push(classValue);
       }
   
-      const statusValue = student.status?.name || student.status;
+      const statusValue = student.status;
       if (statusValue && !statuses.includes(statusValue)) {
         statuses.push(statusValue);
       }
@@ -194,7 +194,7 @@ const ListStudents = () => {
  
     if (selectedStatus) {
       filtered = filtered.filter((student) => {
-        const statusValue =  student.status;
+        const statusValue = student.status?.name || student.status;
         console.log(`Student status: "${statusValue}" vs Selected: "${selectedStatus}"`);
         return statusValue === selectedStatus;
       });
@@ -207,11 +207,11 @@ const ListStudents = () => {
     setFilteredStudents(filtered);
   }, [search, students, selectedField, selectedClass, selectedStatus]);
 
-  const getInitials = ({firstName, lastName}:any) => {
+  const getInitials = (firstName, lastName) => {
     return `${firstName?.[0] || ''}${lastName?.[0] || ''}`.toUpperCase();
   };
 
-  const getAvatarColor = ({name}:any) => {
+  const getAvatarColor = (name) => {
     const colors = ['#2563eb', '#7c3aed', '#dc2626', '#059669', '#ea580c', '#0891b2'];
     const index = name.length % colors.length;
     return colors[index];
